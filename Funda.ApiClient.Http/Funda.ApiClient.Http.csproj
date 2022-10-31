@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Funda.ApiClient.Abstractions\Funda.ApiClient.Abstractions.csproj" />
+    <ProjectReference Include="..\Funda.Common\Funda.Common.csproj" />
+  </ItemGroup>
+
+</Project>
