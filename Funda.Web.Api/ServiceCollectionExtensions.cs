@@ -1,41 +1,11 @@
 ﻿using Funda.ApiClient.Abstractions;
 using Funda.ApiClient.Http;
-using Funda.Common.CQRS;
-using Funda.Common.CQRS.Abstractions;
-using Funda.Core;
 using Funda.Web.Api.Http;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Funda.Web.Api;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddCqrs(this IServiceCollection services)
-    {
-        services.TryAddSingleton<ICommandDispatcher, CommandDispatcher>();
-        services.TryAddSingleton<IQueryDispatcher, QueryDispatcher>();
-
-        var assembly = typeof(GetTopRealEstateAgentsQuery).Assembly;
-
-        // INFO: Using https://www.nuget.org/packages/Scrutor for registering all Query and Command handlers by convention
-        services.Scan(selector =>
-        {
-            selector.FromAssemblies(assembly)
-                .AddClasses(filter => filter.AssignableTo(typeof(IQueryHandler<,>)))
-                .AsImplementedInterfaces()
-                .WithSingletonLifetime();
-        });
-        services.Scan(selector =>
-        {
-            selector.FromAssemblies(assembly)
-                .AddClasses(filter => filter.AssignableTo(typeof(ICommandHandler<,>)))
-                .AsImplementedInterfaces()
-                .WithSingletonLifetime();
-        });
-
-        return services;
-    }
-
     public static void AddFundaApi(this IServiceCollection services, 
         Action<FundaHttpApiOptions> configureApiOptions, 
         Action<RateLimitOptions> configureRateLimitOptions)

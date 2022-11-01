@@ -1,28 +1,24 @@
 ﻿using Funda.ApiClient.Abstractions;
 using Funda.ApiClient.Abstractions.Models;
 using Funda.Common.CQRS.Abstractions;
-using Funda.Core.Models;
 using Microsoft.Extensions.Logging;
 
-namespace Funda.Core;
+namespace Funda.Core.Impl;
 
-public record GetTopRealEstateAgentsQuery(
-    string Location,
-    string? Outdoor = null,
-    int TopNumberOfAgents = 10) : IQuery<IReadOnlyList<RealEstateAgent>>;
-
-internal class GetTopRealEstateAgentsQueryHandler : IQueryHandler<GetTopRealEstateAgentsQuery, IReadOnlyList<RealEstateAgent>>
+internal class GetRealEstateObjectsQueryHandler : IQueryHandler<GetRealEstateObjectsQuery, IReadOnlyList<RealEstateObject>>
 {
     private readonly IFundaApiClient _fundaApiClient;
-    private readonly ILogger<GetTopRealEstateAgentsQueryHandler> _logger;
+    private readonly ILogger<GetRealEstateObjectsQueryHandler> _logger;
 
-    public GetTopRealEstateAgentsQueryHandler(IFundaApiClient fundaApiClient, ILogger<GetTopRealEstateAgentsQueryHandler> logger)
+    public GetRealEstateObjectsQueryHandler(IFundaApiClient fundaApiClient, ILogger<GetRealEstateObjectsQueryHandler> logger)
     {
         _fundaApiClient = fundaApiClient ?? throw new ArgumentNullException(nameof(fundaApiClient));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<IReadOnlyList<RealEstateAgent>> Handle(GetTopRealEstateAgentsQuery query, CancellationToken cancellation = default)
+    public async Task<IReadOnlyList<RealEstateObject>> Handle(
+        GetRealEstateObjectsQuery query, 
+        CancellationToken cancellation = default)
     {
         var searchQuery = new SearchQuery(
             query.Location,
@@ -33,7 +29,7 @@ internal class GetTopRealEstateAgentsQueryHandler : IQueryHandler<GetTopRealEsta
 
         var response = await _fundaApiClient.GetRealEstateObjects(searchQuery, pageRequest, cancellation);
         if (response.TotalNumberOfObjects == 0)
-            return Array.Empty<RealEstateAgent>();
+            return Array.Empty<RealEstateObject>();
 
         var allObjects = response.Objects.ToList();
 
@@ -45,11 +41,6 @@ internal class GetTopRealEstateAgentsQueryHandler : IQueryHandler<GetTopRealEsta
         var responses = await Task.WhenAll(requests);
         allObjects.AddRange(responses.SelectMany(response => response.Objects));
 
-        return allObjects
-            .GroupBy(agent => new { agent.AgentId, agent.AgentName })
-            .Select(group => new RealEstateAgent(group.Key.AgentId, group.Key.AgentName, ObjectCount: group.Count()))
-            .OrderByDescending(agent => agent.ObjectCount)
-            .Take(query.TopNumberOfAgents)
-            .ToArray();
+        return allObjects;
     }
 }

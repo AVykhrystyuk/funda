@@ -1,4 +1,5 @@
 ﻿using Funda.ApiClient.Http;
+using Funda.Core;
 using Funda.Web.Api;
 using Funda.Web.Api.Swagger;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -24,7 +25,7 @@ builder.Services
 
         options.Conventions.Add(new VersionByNamespaceConvention());
     })
-    .AddCqrs()
+    .AddCore()
     .AddFundaApi(
         builder.Configuration.GetSection("FundaHttpApiOptions").Bind,
         builder.Configuration.GetSection("RateLimitOptions").Bind);

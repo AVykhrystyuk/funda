@@ -21,24 +21,25 @@ public class TopRealEstateAgentsController : ControllerBase
     public async Task<IActionResult> Get(
         [FromQuery] GetTopRealEstateAgentsQueryDto query,
         [FromServices] IQueryDispatcher dispatcher,
+        [FromServices] IRealEstateAgentsAggregator aggregator,
         CancellationToken cancellation)
     {
-        var realEstateAgents = await dispatcher.Dispatch(query.ToQuery(), cancellation);
+        var realEstateObjects = await dispatcher.Dispatch(query.ToQuery(), cancellation);
+        var realEstateAgents = aggregator.GetTopAgents(realEstateObjects, query.TopNumberOfAgents);
         return Ok(realEstateAgents.Select(RealEstateAgentDto.From).ToArray());
     }
 }
 
 public record RealEstateAgentDto(long AgentId, string AgentName, int ObjectCount)
 {
-    public static RealEstateAgentDto From(RealEstateAgent agent) => 
+    public static RealEstateAgentDto From(RealEstateAgent agent) =>
         new(agent.AgentId, agent.AgentName, agent.ObjectCount);
 }
 
 public record GetTopRealEstateAgentsQueryDto(
-    string Location, 
-    string? Outdoor = null, 
+    string Location,
+    string? Outdoor = null,
     [Range(1, 1000)] int TopNumberOfAgents = 10)
 {
-    public GetTopRealEstateAgentsQuery ToQuery() =>
-        new(Location, Outdoor, TopNumberOfAgents);
+    public GetRealEstateObjectsQuery ToQuery() => new(Location, Outdoor);
 }
