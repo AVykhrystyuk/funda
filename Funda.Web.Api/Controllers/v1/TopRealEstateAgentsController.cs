@@ -1,4 +1,5 @@
-﻿using Funda.Common.CQRS.Abstractions;
+﻿using System.ComponentModel.DataAnnotations;
+using Funda.Common.CQRS.Abstractions;
 using Funda.Core;
 using Funda.Core.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,10 @@ public record RealEstateAgentDto(long AgentId, string AgentName, int ObjectCount
         new(agent.AgentId, agent.AgentName, agent.ObjectCount);
 }
 
-public record GetTopRealEstateAgentsQueryDto(string Location, string? Outdoor = null, int TopNumberOfAgents = 10)
+public record GetTopRealEstateAgentsQueryDto(
+    string Location, 
+    string? Outdoor = null, 
+    [Range(1, 1000)] int TopNumberOfAgents = 10)
 {
     public GetTopRealEstateAgentsQuery ToQuery() =>
         new(Location, Outdoor, TopNumberOfAgents);
