@@ -9,7 +9,9 @@ public static class RetryPolicies
     public static IAsyncPolicy<HttpResponseMessage> CircuitBreaker(int eventsBeforeBreaking, int secondsOfBreak) =>
         HttpPolicyExtensions
             .HandleTransientHttpError()
-            .CircuitBreakerAsync(eventsBeforeBreaking, durationOfBreak: TimeSpan.FromSeconds(secondsOfBreak));
+            .CircuitBreakerAsync(
+                eventsBeforeBreaking,
+                durationOfBreak: TimeSpan.FromSeconds(secondsOfBreak));
 
     public static IAsyncPolicy<HttpResponseMessage> ExponentialBackoff(
         int retryCount,

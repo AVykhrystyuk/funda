@@ -23,7 +23,8 @@ public class FundaHttpApiClient : IFundaApiClient
     }
 
     public static bool IsTooManyRequests(HttpResponseMessage response) =>
-        response.StatusCode == HttpStatusCode.Unauthorized; // HTTP 401 is thrown instead of HTTP 429 (Too Many Requests)
+        response.StatusCode is HttpStatusCode.TooManyRequests
+                            or HttpStatusCode.Unauthorized; // HTTP 401 is thrown instead of HTTP 429 (Too Many Requests)
 
     public async Task<PagedResponse<RealEstateObject>> GetRealEstateObjects(
         SearchQuery query,
