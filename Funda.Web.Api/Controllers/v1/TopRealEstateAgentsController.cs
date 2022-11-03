@@ -4,6 +4,7 @@ using Funda.Core;
 using Funda.Core.Commands;
 using Funda.Core.Models;
 using Funda.Core.Queries;
+using Funda.DocumentStore.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Funda.Web.Api.Controllers.v1;
@@ -17,10 +18,10 @@ public class TopRealEstateAgentsController : ControllerBase
     /// </summary>
     /// <remarks></remarks>
     /// <param name="query">specific search criteria</param>
-    /// <response code="200">retrieval id</response>
+    /// <response code="202">retrieval id</response>
     [HttpPost("")]
-    [ProducesResponseType(typeof(RealEstateAgentDto[]), 200)]
-    public async Task<Guid> CreateRetrieval(
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status202Accepted)]
+    public async Task<IActionResult> CreateRetrieval(
         [FromBody] GetTopRealEstateAgentsQueryDto query,
         [FromServices] ICommandDispatcher dispatcher,
         CancellationToken cancellation)
@@ -28,7 +29,7 @@ public class TopRealEstateAgentsController : ControllerBase
         var newRetrievalId = Guid.NewGuid();
         var command = query.ToRetrieveAgentsCommand(newRetrievalId);
         await dispatcher.Dispatch(command, cancellation);
-        return newRetrievalId;
+        return Accepted(newRetrievalId);
     }
 
     /// <summary>
@@ -37,25 +38,61 @@ public class TopRealEstateAgentsController : ControllerBase
     /// <remarks></remarks>
     /// <param name="retrievalId">retrieval Id</param>
     /// <response code="200">retrieal status</response>
-    [HttpGet("{requestId}/Status")]
-    [ProducesResponseType(typeof(RealEstateAgentDto[]), 200)]
+    /// <response code="404">retrieal status</response>
+    [HttpGet("{retrievalId}/Status")]
+    [ProducesResponseType(typeof(RealEstateAgentsRetrivalStatusDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetStatus(
         Guid retrievalId,
         [FromServices] IQueryDispatcher dispatcher,
         CancellationToken cancellation)
     {
-        //var realEstateObjects = await dispatcher.Dispatch(query.ToQuery(), cancellation);
-        //var realEstateAgents = aggregator.GetTopAgents(realEstateObjects, query.TopNumberOfAgents);
-        //return Ok(realEstateAgents.Select(RealEstateAgentDto.From).ToArray());
-        return Ok(new RealEstateAgentDto[0]);
+        var query = new GetRealEstateAgentsRetrivalStatusQuery(retrievalId);
+        var retrivalStatus = await dispatcher.Dispatch(query, cancellation);
+        if (retrivalStatus is null)
+            return NotFound();
+        return Ok(RealEstateAgentsRetrivalStatusDto.From(retrivalStatus));
     }
+}
+
+public record ProgressInfoDto(long Total, long Fetched)
+{
+    public static ProgressInfoDto? From(ProgressInfo? info) =>
+        info is null ? null : new(info.Total, info.Fetched);
 }
 
 public record RealEstateAgentDto(long AgentId, string AgentName, int ObjectCount)
 {
     public static RealEstateAgentDto From(RealEstateAgent agent) =>
-        new(agent.AgentId, agent.AgentName, agent.ObjectCount);
+      new(agent.AgentId, agent.AgentName, agent.ObjectCount);
 }
+
+public record RealEstateAgentsRetrivalStatusDto(
+    ProgressInfoDto? Progress,
+    RealEstateAgentDto[]? Agents,
+    string? ErrorMessage)
+{
+    public RetrivalStatusType Type
+    {
+        get
+        {
+            if (ErrorMessage is not null)
+                return RetrivalStatusType.Error;
+            if (Agents is not null)
+                return RetrivalStatusType.Completed;
+            if (Progress is not null)
+                return RetrivalStatusType.Progress;
+            return RetrivalStatusType.None;
+        }
+    }
+
+    public static RealEstateAgentsRetrivalStatusDto From(RealEstateAgentsRetrivalStatus status) =>
+        new(ProgressInfoDto.From(status.Progress),
+            status.RealEstateAgents?.Select(RealEstateAgentDto.From).ToArray(),
+            status.ErrorMessage);
+}
+
+public enum RetrivalStatusType { None, Progress, Completed, Error }
 
 public record GetTopRealEstateAgentsQueryDto(
     string Location,

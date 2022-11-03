@@ -8,6 +8,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Funda.ApiClient.Abstractions\Funda.ApiClient.Abstractions.csproj" />
     <ProjectReference Include="..\Funda.Common.CQRS\Funda.Common.CQRS.csproj" />
+    <ProjectReference Include="..\Funda.Common\Funda.Common.csproj" />
+    <ProjectReference Include="..\Funda.DocumentStore.Abstractions\Funda.DocumentStore.Abstractions.csproj" />
     <ProjectReference Include="..\Funda.Queue.Abstractions\Funda.Queue.Abstractions.csproj" />
   </ItemGroup>
 

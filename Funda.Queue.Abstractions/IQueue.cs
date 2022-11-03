@@ -2,15 +2,17 @@
 
 public interface IQueue<T>
 {
-    void Enqueue(T message);
+    Task Enqueue(T message);
 
-    void Dequeue(Func<T, bool> handleMessage);
+    Task Dequeue(Func<T, bool> handleMessage);
+}
 
-    void Dequeue(Action<T> handleMessage) =>
-        Dequeue(message =>
+public static class IQueueExtensions
+{
+    public static Task Dequeue<T>(this IQueue<T> self, Action<T> handleMessage) =>
+        self.Dequeue(message =>
         {
             handleMessage(message);
             return true;
         });
 }
-

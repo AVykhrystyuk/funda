@@ -1,5 +1,7 @@
 ﻿using Funda.Common.CQRS.Abstractions;
+using Funda.Core.Models;
 using Funda.Core.QueueMessages;
+using Funda.DocumentStore.Abstractions;
 using Funda.Queue.Abstractions;
 
 namespace Funda.Core.Commands;
@@ -7,12 +9,20 @@ namespace Funda.Core.Commands;
 public class RetrieveRealEstateAgentsCommandHandler : ICommandHandler<RetrieveRealEstateAgentsCommand>
 {
     private readonly IQueue<GetRealEstateAgent> _queue;
+    private readonly IDocumentCollection<RealEstateAgentsRetrivalStatus> _collection;
 
-    public RetrieveRealEstateAgentsCommandHandler(IQueue<GetRealEstateAgent> queue) => 
-        _queue = queue;
-
-    public Task Handle(RetrieveRealEstateAgentsCommand command, CancellationToken cancellation)
+    public RetrieveRealEstateAgentsCommandHandler(
+        IQueue<GetRealEstateAgent> queue, 
+        IDocumentCollection<RealEstateAgentsRetrivalStatus> collection)
     {
+        _queue = queue ?? throw new ArgumentNullException(nameof(queue));
+        _collection = collection ?? throw new ArgumentNullException(nameof(collection));
+    }
+
+    public async Task Handle(RetrieveRealEstateAgentsCommand command, CancellationToken cancellation)
+    {
+        await _collection.Insert(command.RetrievalId, new RealEstateAgentsRetrivalStatus());
+
         var message = new GetRealEstateAgent
         {
             RetrievalId = command.RetrievalId,
@@ -20,7 +30,6 @@ public class RetrieveRealEstateAgentsCommandHandler : ICommandHandler<RetrieveRe
             Outdoor = command.Outdoor,
             TopNumberOfAgents = command.TopNumberOfAgents,
         };
-        _queue.Enqueue(message);
-        return Task.CompletedTask;
+        await _queue.Enqueue(message);
     }
 }

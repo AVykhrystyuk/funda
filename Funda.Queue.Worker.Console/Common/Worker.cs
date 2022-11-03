@@ -8,15 +8,19 @@ internal class Worker<T>
     public Worker(IQueue<T> queue) =>
         _queue = queue ?? throw new ArgumentNullException(nameof(queue));
 
-    public void Run(Action<T> handleMessage, TimeSpan interval) => 
-        Run(message => handleMessage(message), interval);
+    public Task Run(Action<T> handleMessage, TimeSpan interval) =>
+        Run(message =>
+        {
+            handleMessage(message);
+            return true;
+        }, interval);
 
-    public void Run(Func<T, bool> handleMessage, TimeSpan interval)
+    public async Task Run(Func<T, bool> handleMessage, TimeSpan interval)
     {
         while (true)
         {
-            _queue.Dequeue(handleMessage);
-            Thread.Sleep(interval);
+            await _queue.Dequeue(handleMessage);
+            await Task.Delay(interval);
         }
     }
 }

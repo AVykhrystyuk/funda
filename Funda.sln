@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Queue.LiteQueue", "Fu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Queue.Worker.Console", "Funda.Queue.Worker.Console\Funda.Queue.Worker.Console.csproj", "{6F3C49DC-9F83-4BE8-90A1-31A568321011}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.DocumentStore.Abstractions", "Funda.DocumentStore.Abstractions\Funda.DocumentStore.Abstractions.csproj", "{5F804961-13A3-4647-A954-47EAAD9F8B8C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.DocumentStore.LiteDb", "Funda.DocumentStore.LiteDb\Funda.DocumentStore.LiteDb.csproj", "{59AD82A0-12F8-45C7-9F75-4E6279A24960}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +85,14 @@ Global
 		{6F3C49DC-9F83-4BE8-90A1-31A568321011}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F3C49DC-9F83-4BE8-90A1-31A568321011}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F3C49DC-9F83-4BE8-90A1-31A568321011}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F804961-13A3-4647-A954-47EAAD9F8B8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F804961-13A3-4647-A954-47EAAD9F8B8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F804961-13A3-4647-A954-47EAAD9F8B8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F804961-13A3-4647-A954-47EAAD9F8B8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59AD82A0-12F8-45C7-9F75-4E6279A24960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59AD82A0-12F8-45C7-9F75-4E6279A24960}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59AD82A0-12F8-45C7-9F75-4E6279A24960}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59AD82A0-12F8-45C7-9F75-4E6279A24960}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

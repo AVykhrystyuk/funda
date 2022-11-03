@@ -14,10 +14,13 @@ public class QueueAdapter<T> : IQueue<T>
         _dequeueInterval = dequeueInterval ?? TimeSpan.FromSeconds(1);
     }
 
-    public void Enqueue(T message) =>
+    public Task Enqueue(T message)
+    {
         _queue.Enqueue(message);
+        return Task.CompletedTask;
+    }
 
-    public void Dequeue(Func<T, bool> handleMessage)
+    public async Task Dequeue(Func<T, bool> handleMessage)
     {
         while (true)
         {
@@ -26,7 +29,7 @@ public class QueueAdapter<T> : IQueue<T>
             var record = _queue.Dequeue();
             if (record is null)
             {
-                Thread.Sleep(_dequeueInterval);
+                await Task.Delay(_dequeueInterval);
                 continue;
             }
             try

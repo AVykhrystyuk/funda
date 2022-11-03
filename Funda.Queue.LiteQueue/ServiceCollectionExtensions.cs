@@ -7,22 +7,31 @@ namespace Funda.Queue.LiteQueue;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddLiteQueue<T>(
-        this IServiceCollection services, 
-        string queueCollection, 
+    public static IServiceCollection AddLiteQueue<TMessage>(
+        this IServiceCollection services,
+        Action<LiteQueueOptions> configureOptions,
         TimeSpan? dequeueInterval = null)
     {
-        services.AddTransient<IQueue<T>>(provider =>
+        var options = new LiteQueueOptions(); // services.AddOptions is not needed here
+        configureOptions(options);
+
+        return services
+            .AddTransient(_ => new LiteDatabase(options.ConnectionString))
+            .AddLiteQueue<TMessage>(options.Collection, dequeueInterval);
+    }
+
+    public static IServiceCollection AddLiteQueue<TMessage>(
+        this IServiceCollection services,
+        string queueCollection,
+        TimeSpan? dequeueInterval = null) =>
+        services.AddTransient<IQueue<TMessage>>(provider =>
         {
             var db = provider.GetRequiredService<LiteDatabase>();
-            var queue = new LiteQueue<T>(db, queueCollection);
+            var queue = new LiteQueue<TMessage>(db, queueCollection);
 
             // Recommended on startup to reset anything that was checked out but not committed or aborted.
             queue.ResetOrphans();
-            
-            return new QueueAdapter<T>(queue, dequeueInterval);
-        });
 
-        return services;
-    }
+            return new QueueAdapter<TMessage>(queue, dequeueInterval);
+        });
 }

@@ -1,5 +1,9 @@
 ﻿using Funda.ApiClient.Http;
 using Funda.Core;
+using Funda.Core.Models;
+using Funda.Core.QueueMessages;
+using Funda.DocumentStore.LiteDb;
+using Funda.Queue.LiteQueue;
 using Funda.Queue.Worker.Console;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,12 +20,14 @@ using var host = Host.CreateDefaultBuilder(args)
             .AddFundaApi(
                 context.Configuration.GetSection("FundaHttpApiOptions").Bind,
                 context.Configuration.GetSection("RateLimitOptions").Bind)
-            .AddLiteDbWithQueue(
-                context.Configuration.GetSection("LiteDbOptions").Bind,
+            .AddLiteDb<RealEstateAgentsRetrivalStatus>(
+                context.Configuration.GetSection("LiteDbOptions").Bind)
+            .AddLiteQueue<GetRealEstateAgent>(
+                context.Configuration.GetSection("LiteQueueOptions").Bind,
                 dequeueInterval)
             .AddTransient<RealEstateAgentsWorker>();
     })
     .Build();
 
 var worker = host.Services.GetRequiredService<RealEstateAgentsWorker>();
-worker.Run(workerRunInterval);
+await worker.Run(workerRunInterval);

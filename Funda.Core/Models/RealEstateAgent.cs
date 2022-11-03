@@ -1,3 +1,8 @@
 ﻿namespace Funda.Core.Models;
 
-public record RealEstateAgent(long AgentId, string AgentName, int ObjectCount);
+public class RealEstateAgent
+{
+    public long AgentId { get; set; } = -1;
+    public string AgentName { get; set; } = string.Empty;
+    public int ObjectCount { get; set; } = -1;
+}
