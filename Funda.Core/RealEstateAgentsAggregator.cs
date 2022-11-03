@@ -1,9 +1,9 @@
 ﻿using Funda.ApiClient.Abstractions.Models;
 using Funda.Core.Models;
 
-namespace Funda.Core.Impl;
+namespace Funda.Core;
 
-internal class RealEstateAgentsAggregator : IRealEstateAgentsAggregator
+internal class RealEstateObjectsAggregator : IRealEstateObjectsAggregator
 {
     public IReadOnlyList<RealEstateAgent> GetTopAgents(IEnumerable<RealEstateObject> objects, int numberOfAgents) =>
         objects

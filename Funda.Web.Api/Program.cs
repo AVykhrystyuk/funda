@@ -28,7 +28,8 @@ builder.Services
     .AddCore()
     .AddFundaApi(
         builder.Configuration.GetSection("FundaHttpApiOptions").Bind,
-        builder.Configuration.GetSection("RateLimitOptions").Bind);
+        builder.Configuration.GetSection("RateLimitOptions").Bind)
+    .AddLiteDbWithQueue(builder.Configuration.GetSection("LiteDbOptions").Bind);
 
 var app = builder.Build();
 

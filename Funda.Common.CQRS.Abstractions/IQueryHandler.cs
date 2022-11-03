@@ -1,7 +1,5 @@
 ﻿namespace Funda.Common.CQRS.Abstractions;
 
-public interface IQuery<TResult> { };
-
 public interface IQueryHandler<in TQuery, TResult> : IQueryHandler<TResult>
     where TQuery : class, IQuery<TResult>
 {

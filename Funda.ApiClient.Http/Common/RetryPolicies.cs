@@ -2,7 +2,7 @@
 using Polly;
 using Polly.Extensions.Http;
 
-namespace Funda.Web.Api.Http;
+namespace Funda.ApiClient.Http.Common;
 
 public static class RetryPolicies
 {

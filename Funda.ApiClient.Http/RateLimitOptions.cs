@@ -1,4 +1,4 @@
-﻿namespace Funda.Web.Api;
+﻿namespace Funda.ApiClient.Http;
 
 public class RateLimitOptions
 {

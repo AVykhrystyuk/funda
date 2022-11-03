@@ -9,16 +9,12 @@ public class CommandDispatcher : ICommandDispatcher
 
     public CommandDispatcher(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
 
-    public Task<TResult> Dispatch<TResult>(ICommand<TResult> command, CancellationToken cancellation)
+    public Task Dispatch<TCommand>(TCommand command, CancellationToken cancellation)
+        where TCommand : class, ICommand
     {
         ArgumentNullException.ThrowIfNull(command);
 
-        var handlerType = GenericHandlerType(command);
-        var handler = (ICommandHandler<TResult>)_serviceProvider.GetRequiredService(handlerType);
+        var handler = _serviceProvider.GetRequiredService<ICommandHandler<TCommand>>();
         return handler.Handle(command, cancellation);
     }
-
-    private static Type GenericHandlerType<TResult>(ICommand<TResult> command) =>
-        typeof(ICommandHandler<,>)
-            .MakeGenericType(command.GetType(), typeof(TResult));
 }

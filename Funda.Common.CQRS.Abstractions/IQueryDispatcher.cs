@@ -2,5 +2,5 @@
 
 public interface IQueryDispatcher
 {
-    Task<TResult> Dispatch<TResult>(IQuery<TResult> query, CancellationToken cancellation);
+    Task<TResult> Dispatch<TResult>(IQuery<TResult> query, CancellationToken cancellation = default);
 }

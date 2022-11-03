@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Funda.Common.CQRS.Abstractions;
 using Funda.Core;
+using Funda.Core.Commands;
 using Funda.Core.Models;
+using Funda.Core.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Funda.Web.Api.Controllers.v1;
@@ -11,22 +13,41 @@ namespace Funda.Web.Api.Controllers.v1;
 public class TopRealEstateAgentsController : ControllerBase
 {
     /// <summary>
-    /// Retrieves top N number of real estate agent that have the most object listed for sale
+    /// Request to retrieve top N number of real estate agent that have the most object listed for sale.
     /// </summary>
     /// <remarks></remarks>
     /// <param name="query">specific search criteria</param>
-    /// <response code="200">real estate agents</response>
-    [HttpGet("")]
+    /// <response code="200">retrieval id</response>
+    [HttpPost("")]
     [ProducesResponseType(typeof(RealEstateAgentDto[]), 200)]
-    public async Task<IActionResult> Get(
-        [FromQuery] GetTopRealEstateAgentsQueryDto query,
-        [FromServices] IQueryDispatcher dispatcher,
-        [FromServices] IRealEstateAgentsAggregator aggregator,
+    public async Task<Guid> CreateRetrieval(
+        [FromBody] GetTopRealEstateAgentsQueryDto query,
+        [FromServices] ICommandDispatcher dispatcher,
         CancellationToken cancellation)
     {
-        var realEstateObjects = await dispatcher.Dispatch(query.ToQuery(), cancellation);
-        var realEstateAgents = aggregator.GetTopAgents(realEstateObjects, query.TopNumberOfAgents);
-        return Ok(realEstateAgents.Select(RealEstateAgentDto.From).ToArray());
+        var newRetrievalId = Guid.NewGuid();
+        var command = query.ToRetrieveAgentsCommand(newRetrievalId);
+        await dispatcher.Dispatch(command, cancellation);
+        return newRetrievalId;
+    }
+
+    /// <summary>
+    /// Checks the status for real estate agent retrieal by retrieval id.
+    /// </summary>
+    /// <remarks></remarks>
+    /// <param name="retrievalId">retrieval Id</param>
+    /// <response code="200">retrieal status</response>
+    [HttpGet("{requestId}/Status")]
+    [ProducesResponseType(typeof(RealEstateAgentDto[]), 200)]
+    public async Task<IActionResult> GetStatus(
+        Guid retrievalId,
+        [FromServices] IQueryDispatcher dispatcher,
+        CancellationToken cancellation)
+    {
+        //var realEstateObjects = await dispatcher.Dispatch(query.ToQuery(), cancellation);
+        //var realEstateAgents = aggregator.GetTopAgents(realEstateObjects, query.TopNumberOfAgents);
+        //return Ok(realEstateAgents.Select(RealEstateAgentDto.From).ToArray());
+        return Ok(new RealEstateAgentDto[0]);
     }
 }
 
@@ -41,5 +62,6 @@ public record GetTopRealEstateAgentsQueryDto(
     string? Outdoor = null,
     [Range(1, 1000)] int TopNumberOfAgents = 10)
 {
-    public GetRealEstateObjectsQuery ToQuery() => new(Location, Outdoor);
+    public RetrieveRealEstateAgentsCommand ToRetrieveAgentsCommand(Guid retrievalId) => 
+        new(retrievalId, Location, Outdoor, TopNumberOfAgents);
 }

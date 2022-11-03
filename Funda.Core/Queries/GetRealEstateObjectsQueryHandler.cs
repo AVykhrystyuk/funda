@@ -3,7 +3,7 @@ using Funda.ApiClient.Abstractions.Models;
 using Funda.Common.CQRS.Abstractions;
 using Microsoft.Extensions.Logging;
 
-namespace Funda.Core.Impl;
+namespace Funda.Core.Queries;
 
 internal class GetRealEstateObjectsQueryHandler : IQueryHandler<GetRealEstateObjectsQuery, IReadOnlyList<RealEstateObject>>
 {
@@ -17,7 +17,7 @@ internal class GetRealEstateObjectsQueryHandler : IQueryHandler<GetRealEstateObj
     }
 
     public async Task<IReadOnlyList<RealEstateObject>> Handle(
-        GetRealEstateObjectsQuery query, 
+        GetRealEstateObjectsQuery query,
         CancellationToken cancellation = default)
     {
         var searchQuery = new SearchQuery(
