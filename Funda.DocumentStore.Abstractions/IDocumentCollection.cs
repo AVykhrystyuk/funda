@@ -2,6 +2,7 @@
 
 public interface IDocumentCollection<T>
 {
+    Task<IReadOnlyList<T>> GetAll(CancellationToken cancellation = default);
     Task<T> Get(string key, CancellationToken cancellation = default);
     Task Insert(string key, T entity);
     Task Update(string key, T entity);

@@ -6,8 +6,8 @@ using Funda.ApiClient.Abstractions;
 namespace Funda.ApiClient.Wcf;
 
 [Obsolete(@"
-Added WCF Service Reference - http://partnerapi.funda.nl/feeds/Aanbod.svc?wsdl) as a Connected Service. 
-The generated client keeps failing with non-self-explanatory errors so I moved to simply calling the service from http client.
+Added WCF Service Reference (http://partnerapi.funda.nl/feeds/Aanbod.svc?wsdl) as a Connected Service. 
+The generated client keeps failing with non-self-explanatory errors so I moved to calling the service from http client.
 ")]
 public class FundaWcfApiClient : IFundaApiClient
 {

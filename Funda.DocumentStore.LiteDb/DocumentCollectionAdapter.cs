@@ -17,6 +17,9 @@ public class DocumentCollectionAdapter<T> : IDocumentCollection<T>
     public IDisposable WriteLock() => 
         _database.Engine.Locker.Write();
 
+    public Task<IReadOnlyList<T>> GetAll(CancellationToken cancellation = default) =>
+        Task.FromResult<IReadOnlyList<T>>(_collection.FindAll().ToArray());
+
     public Task<T> Get(string key, CancellationToken cancellation) =>
         Task.FromResult(_collection.FindById(key));
 

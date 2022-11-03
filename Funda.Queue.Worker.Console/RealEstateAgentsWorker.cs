@@ -1,7 +1,4 @@
-﻿using Funda.Core;
-using Funda.Core.Models;
-using Funda.Core.QueueMessages;
-using Funda.DocumentStore.Abstractions;
+﻿using Funda.Core.QueueMessages;
 using Funda.Queue.Abstractions;
 using Funda.Queue.Worker.Console.Common;
 using Microsoft.Extensions.Logging;
@@ -17,8 +14,6 @@ internal class RealEstateAgentsWorker
     public RealEstateAgentsWorker(
         IQueue<GetRealEstateAgent> queue,
         GetRealEstateAgentMessageHandler messageHandler,
-        IRealEstateObjectsAggregator objectsAggregator,
-        IDocumentCollection<RealEstateAgentsRetrivalStatus> documentCollection,
         ILogger<RealEstateAgentsWorker> logger)
     {
         _worker = new Worker<GetRealEstateAgent>(queue);

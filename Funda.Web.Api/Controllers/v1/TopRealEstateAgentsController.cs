@@ -33,7 +33,7 @@ public class TopRealEstateAgentsController : ControllerBase
     }
 
     /// <summary>
-    /// Checks the status for real estate agent retrieal by retrieval id.
+    /// Get the status for real estate agent retrieal by retrieval id.
     /// </summary>
     /// <remarks></remarks>
     /// <param name="retrievalId">retrieval Id</param>
@@ -48,11 +48,41 @@ public class TopRealEstateAgentsController : ControllerBase
         CancellationToken cancellation)
     {
         var query = new GetRealEstateAgentsRetrivalStatusQuery(retrievalId);
-        var retrivalStatus = await dispatcher.Dispatch(query, cancellation);
-        if (retrivalStatus is null)
+        var retrieval = await dispatcher.Dispatch(query, cancellation);
+        if (retrieval is null)
             return NotFound();
-        return Ok(RealEstateAgentsRetrivalStatusDto.From(retrivalStatus));
+        return Ok(RealEstateAgentsRetrivalStatusDto.From(retrieval));
     }
+
+    /// <summary>
+    /// Get lightweight status for real estate agent retrievals without the fetched data (to safe traffic).
+    /// </summary>
+    /// <remarks></remarks>
+    /// <response code="200">retrieal statuses</response>
+    [HttpGet("Statuses")]
+    [ProducesResponseType(typeof(RealEstateAgentsRetrivalStatusDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetStatuses(
+        [FromServices] IQueryDispatcher dispatcher,
+        CancellationToken cancellation)
+    {
+        var query = new GetRealEstateAgentsRetrivalStatusesQuery();
+        var retrievals = await dispatcher.Dispatch(query, cancellation);
+
+        foreach (var retrieval in retrievals.Where(s => s.RealEstateAgents is not null))
+            retrieval.RealEstateAgents = new RealEstateAgent[0];
+
+        var dtos = retrievals.Select(RealEstateAgentsRetrivalStatusDto.From).ToArray();
+        return Ok(dtos);
+    }
+}
+
+public record GetTopRealEstateAgentsQueryDto(
+    string Location,
+    string? Outdoor = null,
+    [Range(1, 1000)] int TopNumberOfAgents = 10)
+{
+    public RetrieveRealEstateAgentsCommand ToRetrieveAgentsCommand(Guid retrievalId) => 
+        new(retrievalId, Location, Outdoor, TopNumberOfAgents);
 }
 
 public record ProgressInfoDto(long Total, long Fetched)
@@ -93,12 +123,3 @@ public record RealEstateAgentsRetrivalStatusDto(
 }
 
 public enum RetrivalStatusType { None, Progress, Completed, Error }
-
-public record GetTopRealEstateAgentsQueryDto(
-    string Location,
-    string? Outdoor = null,
-    [Range(1, 1000)] int TopNumberOfAgents = 10)
-{
-    public RetrieveRealEstateAgentsCommand ToRetrieveAgentsCommand(Guid retrievalId) => 
-        new(retrievalId, Location, Outdoor, TopNumberOfAgents);
-}
