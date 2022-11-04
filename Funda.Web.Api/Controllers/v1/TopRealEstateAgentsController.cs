@@ -37,21 +37,21 @@ public class TopRealEstateAgentsController : ControllerBase
     /// </summary>
     /// <remarks></remarks>
     /// <param name="retrievalId">retrieval Id</param>
-    /// <response code="200">retrieal status</response>
-    /// <response code="404">retrieal status</response>
+    /// <response code="200">Retrieval status</response>
+    /// <response code="404">No retrieval for this retrievalId</response>
     [HttpGet("{retrievalId}/Status")]
-    [ProducesResponseType(typeof(RealEstateAgentsRetrivalStatusDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RealEstateAgentsRetrievalStatusDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetStatus(
         Guid retrievalId,
         [FromServices] IQueryDispatcher dispatcher,
         CancellationToken cancellation)
     {
-        var query = new GetRealEstateAgentsRetrivalStatusQuery(retrievalId);
+        var query = new GetRealEstateAgentsRetrievalStatusQuery(retrievalId);
         var retrieval = await dispatcher.Dispatch(query, cancellation);
         if (retrieval is null)
             return NotFound();
-        return Ok(RealEstateAgentsRetrivalStatusDto.From(retrieval));
+        return Ok(RealEstateAgentsRetrievalStatusDto.From(retrieval));
     }
 
     /// <summary>
@@ -60,18 +60,20 @@ public class TopRealEstateAgentsController : ControllerBase
     /// <remarks></remarks>
     /// <response code="200">retrieal statuses</response>
     [HttpGet("Statuses")]
-    [ProducesResponseType(typeof(RealEstateAgentsRetrivalStatusDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RealEstateAgentsRetrievalStatusDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetStatuses(
         [FromServices] IQueryDispatcher dispatcher,
         CancellationToken cancellation)
     {
-        var query = new GetRealEstateAgentsRetrivalStatusesQuery();
+        // TODO: Do we need to add a pagination here?
+
+        var query = new GetRealEstateAgentsRetrievalStatusesQuery();
         var retrievals = await dispatcher.Dispatch(query, cancellation);
 
         foreach (var retrieval in retrievals.Where(s => s.RealEstateAgents is not null))
             retrieval.RealEstateAgents = new RealEstateAgent[0];
 
-        var dtos = retrievals.Select(RealEstateAgentsRetrivalStatusDto.From).ToArray();
+        var dtos = retrievals.Select(RealEstateAgentsRetrievalStatusDto.From).ToArray();
         return Ok(dtos);
     }
 }
@@ -97,29 +99,29 @@ public record RealEstateAgentDto(long AgentId, string AgentName, int ObjectCount
       new(agent.AgentId, agent.AgentName, agent.ObjectCount);
 }
 
-public record RealEstateAgentsRetrivalStatusDto(
+public record RealEstateAgentsRetrievalStatusDto(
     ProgressInfoDto? Progress,
     RealEstateAgentDto[]? Agents,
     string? ErrorMessage)
 {
-    public RetrivalStatusType Type
+    public RetrievalStatusType Type
     {
         get
         {
             if (ErrorMessage is not null)
-                return RetrivalStatusType.Error;
+                return RetrievalStatusType.Error;
             if (Agents is not null)
-                return RetrivalStatusType.Completed;
+                return RetrievalStatusType.Completed;
             if (Progress is not null)
-                return RetrivalStatusType.Progress;
-            return RetrivalStatusType.None;
+                return RetrievalStatusType.Progress;
+            return RetrievalStatusType.None;
         }
     }
 
-    public static RealEstateAgentsRetrivalStatusDto From(RealEstateAgentsRetrivalStatus status) =>
+    public static RealEstateAgentsRetrievalStatusDto From(RealEstateAgentsRetrievalStatus status) =>
         new(ProgressInfoDto.From(status.Progress),
             status.RealEstateAgents?.Select(RealEstateAgentDto.From).ToArray(),
             status.ErrorMessage);
 }
 
-public enum RetrivalStatusType { None, Progress, Completed, Error }
+public enum RetrievalStatusType { None, Progress, Completed, Error }

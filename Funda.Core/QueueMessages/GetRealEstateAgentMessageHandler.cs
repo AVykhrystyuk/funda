@@ -8,13 +8,13 @@ public class GetRealEstateAgentMessageHandler
 {
     private readonly IRealEstateObjectsFetcher _objectsFetcher;
     private readonly IRealEstateObjectsAggregator _objectsAggregator;
-    private readonly IDocumentCollection<RealEstateAgentsRetrivalStatus> _documentCollection;
+    private readonly IDocumentCollection<RealEstateAgentsRetrievalStatus> _documentCollection;
     private readonly ILogger<GetRealEstateAgentMessageHandler> _logger;
 
     public GetRealEstateAgentMessageHandler(
         IRealEstateObjectsFetcher objectsFetcher,
         IRealEstateObjectsAggregator objectsAggregator,
-        IDocumentCollection<RealEstateAgentsRetrivalStatus> documentCollection,
+        IDocumentCollection<RealEstateAgentsRetrievalStatus> documentCollection,
         ILogger<GetRealEstateAgentMessageHandler> logger)
     {
         _objectsFetcher = objectsFetcher ?? throw new ArgumentNullException(nameof(objectsFetcher));
@@ -63,7 +63,7 @@ public class GetRealEstateAgentMessageHandler
 
     private static string GetDocumentKey(GetRealEstateAgent message) => message.RetrievalId.ToString();
 
-    private async Task UpdateStatus(string key, Func<RealEstateAgentsRetrivalStatus, RealEstateAgentsRetrivalStatus> updateStatus)
+    private async Task UpdateStatus(string key, Func<RealEstateAgentsRetrievalStatus, RealEstateAgentsRetrievalStatus> updateStatus)
     {
         using var _ = _documentCollection.WriteLock();
         var status = await _documentCollection.Get(key);
@@ -71,7 +71,7 @@ public class GetRealEstateAgentMessageHandler
         await _documentCollection.Update(key, status);
     }
 
-    private Task UpdateStatus(string key, Action<RealEstateAgentsRetrivalStatus> updateStatus) =>
+    private Task UpdateStatus(string key, Action<RealEstateAgentsRetrievalStatus> updateStatus) =>
         UpdateStatus(key, status =>
         {
             updateStatus(status);

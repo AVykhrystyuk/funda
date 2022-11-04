@@ -1,6 +1,6 @@
 ﻿namespace Funda.Core.Models;
 
-public class RealEstateAgentsRetrivalStatus
+public class RealEstateAgentsRetrievalStatus
 {
     public ProgressInfo? Progress { get; set; }
     public RealEstateAgent[]? RealEstateAgents { get; set; }

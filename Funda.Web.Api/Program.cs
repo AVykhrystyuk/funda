@@ -39,7 +39,7 @@ builder.Services
     .AddFundaApi(
         builder.Configuration.GetSection("FundaHttpApiOptions").Bind,
         builder.Configuration.GetSection("RateLimitOptions").Bind)
-    .AddLiteDb<RealEstateAgentsRetrivalStatus>(
+    .AddLiteDb<RealEstateAgentsRetrievalStatus>(
         builder.Configuration.GetSection("LiteDbOptions").Bind)
     .AddLiteQueue<GetRealEstateAgent>(
         builder.Configuration.GetSection("LiteQueueOptions").Bind);
