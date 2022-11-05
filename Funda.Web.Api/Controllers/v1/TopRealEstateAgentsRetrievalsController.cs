@@ -19,7 +19,7 @@ public class TopRealEstateAgentsRetrievalsController : ControllerBase
     /// <response code="202">retrieval</response>
     [HttpPost("")]
     [ProducesResponseType(typeof(RetrievalDto), StatusCodes.Status202Accepted)]
-    public async Task<IActionResult> CreateRetrieval(
+    public async Task<ActionResult<RetrievalDto>> CreateRetrieval(
         [FromBody] GetTopRealEstateAgentsQueryDto query,
         [FromServices] ICommandDispatcher dispatcher,
         CancellationToken cancellation)
@@ -40,7 +40,7 @@ public class TopRealEstateAgentsRetrievalsController : ControllerBase
     [HttpGet("{retrievalId}")]
     [ProducesResponseType(typeof(RealEstateAgentsRetrievalDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetRetrieval(
+    public async Task<ActionResult<RealEstateAgentsRetrievalDto>> GetRetrieval(
         Guid retrievalId,
         [FromServices] IQueryDispatcher dispatcher,
         CancellationToken cancellation)
@@ -49,7 +49,7 @@ public class TopRealEstateAgentsRetrievalsController : ControllerBase
         var retrieval = await dispatcher.Dispatch(query, cancellation);
         if (retrieval is null)
             return NotFound();
-        return Ok(RealEstateAgentsRetrievalDto.From(retrieval));
+        return RealEstateAgentsRetrievalDto.From(retrieval);
     }
 
     /// <summary>
@@ -58,8 +58,8 @@ public class TopRealEstateAgentsRetrievalsController : ControllerBase
     /// <remarks></remarks>
     /// <response code="200">Retrievals</response>
     [HttpGet("")]
-    [ProducesResponseType(typeof(RealEstateAgentsRetrievalDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetRetrievals(
+    [ProducesResponseType(typeof(RealEstateAgentsRetrievalDto[]), StatusCodes.Status200OK)]
+    public async Task<ActionResult<RealEstateAgentsRetrievalDto[]>> GetRetrievals(
         [FromServices] IQueryDispatcher dispatcher,
         CancellationToken cancellation)
     {
@@ -69,10 +69,9 @@ public class TopRealEstateAgentsRetrievalsController : ControllerBase
         var retrievals = await dispatcher.Dispatch(query, cancellation);
 
         foreach (var retrieval in retrievals.Where(s => s.RealEstateAgents is not null))
-            retrieval.RealEstateAgents = new RealEstateAgent[0];
+            retrieval.RealEstateAgents = Array.Empty<RealEstateAgent>();
 
-        var dtos = retrievals.Select(RealEstateAgentsRetrievalDto.From).ToArray();
-        return Ok(dtos);
+        return retrievals.Select(RealEstateAgentsRetrievalDto.From).ToArray();
     }
 }
 

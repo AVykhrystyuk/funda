@@ -17,6 +17,7 @@ public static class SwaggerBuilderExtensions
         app.UseSwaggerUI(options =>
         {
             AddSwaggerEndpoints(apiVersionDescriptionProvider, options);
+            options.DisplayOperationId();
         });
 
         return app;

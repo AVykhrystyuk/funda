@@ -27,6 +27,8 @@ public class ConfigureSwaggerOptions : IConfigureNamedOptions<SwaggerGenOptions>
 
         var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
         options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
+        options.CustomOperationIds((apiDescription) => apiDescription.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
     }
 
     private static OpenApiInfo CreateVersionInfo(ApiVersionDescription desc)
