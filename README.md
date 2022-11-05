@@ -20,10 +20,12 @@ Solution is built using Clean Architecture + CQRS and asynchronous processing of
 
 ## System design decisions
 
-Funda can store millions of objects listed for sale.
-Scanning all of them synchronously (during a single API call) does not make any sense if we want to have a scalable solution.
+We don't know the size of the dataset to be processed, Funda can store millions of objects listed for sale. 
+So processing all of them synchronously (within a single long-running API request/response call) does not make any sense if we want to have a scalable solution. 
 
+#### This is what the communication between the client and WebApi looks like:
 ```mermaid
+%% This diagram needs to be rendered, for example, GitHub renders it by default.
 sequenceDiagram
     Client->>+Funda.Web.Api: [POST] /TopRealEstateAgents
     Funda.Web.Api-->>-Client: [202] { "retrievalId": "..." }
@@ -42,7 +44,9 @@ sequenceDiagram
     Note over Client,Funda.Web.Api: The retrieval is completed, and "agents" array is populated in the response
 ```
 
+#### This is how the search request is handled under the hood:
 ```mermaid
+%% This diagram needs to be rendered, for example, GitHub renders it by default.
 flowchart TB
     C([Client])
     WebApi(Funda.Web.Api)
