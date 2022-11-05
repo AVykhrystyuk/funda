@@ -24,6 +24,25 @@ Funda can store millions of objects listed for sale.
 Scanning all of them synchronously (during a single API call) does not make any sense if we want to have a scalable solution.
 
 ```mermaid
+sequenceDiagram
+    Client->>+Funda.Web.Api: [POST] /TopRealEstateAgents
+    Funda.Web.Api-->>-Client: [202] { "retrievalId": "..." }
+    Note over Client,Funda.Web.Api: Request for agents' retrieval is accepted
+    
+    Client->>+Funda.Web.Api: [GET] /TopRealEstateAgents/{retrievalId}/Status
+    Funda.Web.Api-->>-Client: [200] { "type": "None" }
+    Note over Client,Funda.Web.Api: The retrieval is not launched yet
+        
+    Client->>+Funda.Web.Api: [GET] /TopRealEstateAgents/{retrievalId}/Status
+    Funda.Web.Api-->>-Client: [200] { "type": "Progress", "progress": { "Total": 120, "Fetched": 10 } }
+    Note over Client,Funda.Web.Api: The retrieval is launched
+    
+    Client->>+Funda.Web.Api: [GET] /TopRealEstateAgents/{retrievalId}/Status
+    Funda.Web.Api-->>-Client: [200] { "type": "Completed", "progress": { "Total": 120, "Fetched": 120 }, "agents": [...] }
+    Note over Client,Funda.Web.Api: The retrieval is completed, and "agents" array is populated in the response
+```
+
+```mermaid
 flowchart TB
     C([Client])
     WebApi(Funda.Web.Api)
@@ -39,14 +58,6 @@ flowchart TB
     Worker-- stores the fetch progress + the fetched data --> KVStore
 ```
 
- ```mermaid
-flowchart TB
-    C([Client])
-    WebApi(Funda.Web.Api)
-    KVStore[(Funda.DocumentStore.LiteDb)]
-    
-    C<-- GET retrieval status using retrieval id -->WebApi<-- fetch retrieval progress + the fetched data --> KVStore
-```
 
 ## Steps to run the solution
 * Restore NuGet packages
