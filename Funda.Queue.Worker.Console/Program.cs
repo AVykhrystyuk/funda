@@ -20,7 +20,7 @@ using var host = Host.CreateDefaultBuilder(args)
             .AddFundaApi(
                 context.Configuration.GetSection("FundaHttpApiOptions").Bind,
                 context.Configuration.GetSection("RateLimitOptions").Bind)
-            .AddLiteDb<RealEstateAgentsRetrievalStatus>(
+            .AddLiteDb<RealEstateAgentsRetrieval>(
                 context.Configuration.GetSection("LiteDbOptions").Bind)
             .AddLiteQueue<GetRealEstateAgent>(
                 context.Configuration.GetSection("LiteQueueOptions").Bind,

@@ -20,7 +20,7 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<ICommandDispatcher, CommandDispatcher>();
         services.TryAddSingleton<IQueryDispatcher, QueryDispatcher>();
 
-        var assembly = typeof(GetRealEstateAgentsRetrievalStatusQuery).Assembly; // contains Query/Command handlers
+        var assembly = typeof(GetRealEstateAgentsRetrievalQuery).Assembly; // contains Query/Command handlers
 
         // Using https://www.nuget.org/packages/Scrutor for registering all Query and Command handlers by convention
         return services

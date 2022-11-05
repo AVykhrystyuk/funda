@@ -8,13 +8,13 @@ public class GetRealEstateAgentMessageHandler
 {
     private readonly IRealEstateObjectsFetcher _objectsFetcher;
     private readonly IRealEstateObjectsAggregator _objectsAggregator;
-    private readonly IDocumentCollection<RealEstateAgentsRetrievalStatus> _documentCollection;
+    private readonly IDocumentCollection<RealEstateAgentsRetrieval> _documentCollection;
     private readonly ILogger<GetRealEstateAgentMessageHandler> _logger;
 
     public GetRealEstateAgentMessageHandler(
         IRealEstateObjectsFetcher objectsFetcher,
         IRealEstateObjectsAggregator objectsAggregator,
-        IDocumentCollection<RealEstateAgentsRetrievalStatus> documentCollection,
+        IDocumentCollection<RealEstateAgentsRetrieval> documentCollection,
         ILogger<GetRealEstateAgentMessageHandler> logger)
     {
         _objectsFetcher = objectsFetcher ?? throw new ArgumentNullException(nameof(objectsFetcher));
@@ -38,7 +38,7 @@ public class GetRealEstateAgentMessageHandler
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error processing the message {Key}", logKey);
-            await UpdateStatus(GetDocumentKey(message), status => status.ErrorMessage = ex.Message);
+            await UpdateRetrieval(GetDocumentKey(message), retrieval => retrieval.ErrorMessage = ex.Message);
             return false;
         }
 
@@ -51,30 +51,30 @@ public class GetRealEstateAgentMessageHandler
         var key = GetDocumentKey(message);
 
         async Task OnProgress(ProgressInfo info) =>
-            await UpdateStatus(key, status => status.Progress = info);
+            await UpdateRetrieval(key, retrieval => retrieval.Progress = info);
 
         var realEstateObjects = await _objectsFetcher.Fetch(message.Location, message.Outdoor, OnProgress);
 
         _logger.LogInformation("Aggregate top {NumberOfAgents} agents", message.TopNumberOfAgents);
         var realEstateAgents = _objectsAggregator.GetTopAgents(realEstateObjects, message.TopNumberOfAgents).ToArray();
 
-        await UpdateStatus(key, status => status.RealEstateAgents = realEstateAgents);
+        await UpdateRetrieval(key, retrieval => retrieval.RealEstateAgents = realEstateAgents);
     }
 
     private static string GetDocumentKey(GetRealEstateAgent message) => message.RetrievalId.ToString();
 
-    private async Task UpdateStatus(string key, Func<RealEstateAgentsRetrievalStatus, RealEstateAgentsRetrievalStatus> updateStatus)
+    private async Task UpdateRetrieval(string key, Func<RealEstateAgentsRetrieval, RealEstateAgentsRetrieval> updateRetrieval)
     {
         using var _ = _documentCollection.WriteLock();
-        var status = await _documentCollection.Get(key);
-        var updatedStatus = updateStatus(status);
-        await _documentCollection.Update(key, status);
+        var retrieval = await _documentCollection.Get(key);
+        var updatedRetrieval = updateRetrieval(retrieval);
+        await _documentCollection.Update(key, updatedRetrieval);
     }
 
-    private Task UpdateStatus(string key, Action<RealEstateAgentsRetrievalStatus> updateStatus) =>
-        UpdateStatus(key, status =>
+    private Task UpdateRetrieval(string key, Action<RealEstateAgentsRetrieval> updateRetrieval) =>
+        UpdateRetrieval(key, retrieval =>
         {
-            updateStatus(status);
-            return status;
+            updateRetrieval(retrieval);
+            return retrieval;
         });
 }

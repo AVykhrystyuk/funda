@@ -27,20 +27,20 @@ So processing all of them synchronously (within a single long-running API reques
 ```mermaid
 %% This diagram needs to be rendered, for example, GitHub renders it by default.
 sequenceDiagram
-    Client->>+Funda.Web.Api: [POST] /TopRealEstateAgents
+    Client->>+Funda.Web.Api: [POST] /TopRealEstateAgentsRetrievals
     Funda.Web.Api-->>-Client: [202] { "retrievalId": "..." }
     Note over Client,Funda.Web.Api: Request for agents' retrieval is accepted
     
-    Client->>+Funda.Web.Api: [GET] /TopRealEstateAgents/{retrievalId}/Status
-    Funda.Web.Api-->>-Client: [200] { "type": "None" }
+    Client->>+Funda.Web.Api: [GET] /TopRealEstateAgentsRetrievals/{retrievalId}
+    Funda.Web.Api-->>-Client: [200] { "status": "None" }
     Note over Client,Funda.Web.Api: The retrieval is not launched yet
         
-    Client->>+Funda.Web.Api: [GET] /TopRealEstateAgents/{retrievalId}/Status
-    Funda.Web.Api-->>-Client: [200] { "type": "Progress", "progress": { "Total": 120, "Fetched": 10 } }
+    Client->>+Funda.Web.Api: [GET] /TopRealEstateAgentsRetrievals/{retrievalId}
+    Funda.Web.Api-->>-Client: [200] { "status": "Progress", "progress": { "Total": 120, "Fetched": 10 } }
     Note over Client,Funda.Web.Api: The retrieval is launched
     
-    Client->>+Funda.Web.Api: [GET] /TopRealEstateAgents/{retrievalId}/Status
-    Funda.Web.Api-->>-Client: [200] { "type": "Completed", "progress": { "Total": 120, "Fetched": 120 }, "agents": [...] }
+    Client->>+Funda.Web.Api: [GET] /TopRealEstateAgentsRetrievals/{retrievalId}
+    Funda.Web.Api-->>-Client: [200] { "status": "Completed", "progress": { "Total": 120, "Fetched": 120 }, "agents": [...] }
     Note over Client,Funda.Web.Api: The retrieval is completed, and "agents" array is populated in the response
 ```
 
@@ -70,7 +70,7 @@ flowchart TB
 * Run the following command to issue a fetch request (or use a Swagger UI) that will be put in a queue and processed asynchronously by a background worker. The Api will return you `retrievalId` (Guid) that is required to receive the result of the background fetch
 ```bash
 curl -X 'POST' \
-  'https://localhost:7215/v1/TopRealEstateAgents' \
+  'https://localhost:7215/v1/TopRealEstateAgentsRetrievals' \
   -H 'accept: text/plain' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -82,6 +82,6 @@ curl -X 'POST' \
 * Poll the following command to see the fetch process
 ```bash
 curl -X 'GET' \
-  'https://localhost:7215/v1/TopRealEstateAgents/{retrievalId}/Status' \
+  'https://localhost:7215/v1/TopRealEstateAgentsRetrievals/{retrievalId}' \
   -H 'accept: text/plain'
 ```

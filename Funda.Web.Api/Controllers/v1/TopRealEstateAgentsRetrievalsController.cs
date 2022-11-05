@@ -1,26 +1,24 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Funda.Common.CQRS.Abstractions;
-using Funda.Core;
 using Funda.Core.Commands;
 using Funda.Core.Models;
 using Funda.Core.Queries;
-using Funda.DocumentStore.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Funda.Web.Api.Controllers.v1;
 
 [ApiController]
 [Route("v{version:apiVersion}/[controller]")]
-public class TopRealEstateAgentsController : ControllerBase
+public class TopRealEstateAgentsRetrievalsController : ControllerBase
 {
     /// <summary>
     /// Request to retrieve top N number of real estate agent that have the most object listed for sale.
     /// </summary>
     /// <remarks></remarks>
     /// <param name="query">specific search criteria</param>
-    /// <response code="202">retrieval id</response>
+    /// <response code="202">retrieval</response>
     [HttpPost("")]
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status202Accepted)]
+    [ProducesResponseType(typeof(RetrievalDto), StatusCodes.Status202Accepted)]
     public async Task<IActionResult> CreateRetrieval(
         [FromBody] GetTopRealEstateAgentsQueryDto query,
         [FromServices] ICommandDispatcher dispatcher,
@@ -29,54 +27,56 @@ public class TopRealEstateAgentsController : ControllerBase
         var newRetrievalId = Guid.NewGuid();
         var command = query.ToRetrieveAgentsCommand(newRetrievalId);
         await dispatcher.Dispatch(command, cancellation);
-        return Accepted(newRetrievalId);
+        return Accepted(new RetrievalDto(newRetrievalId));
     }
 
     /// <summary>
-    /// Get the status for real estate agent retrieal by retrieval id.
+    /// Get the real estate agent retrieval by retrieval id.
     /// </summary>
     /// <remarks></remarks>
     /// <param name="retrievalId">retrieval Id</param>
-    /// <response code="200">Retrieval status</response>
+    /// <response code="200">Retrieval</response>
     /// <response code="404">No retrieval for this retrievalId</response>
-    [HttpGet("{retrievalId}/Status")]
-    [ProducesResponseType(typeof(RealEstateAgentsRetrievalStatusDto), StatusCodes.Status200OK)]
+    [HttpGet("{retrievalId}")]
+    [ProducesResponseType(typeof(RealEstateAgentsRetrievalDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetStatus(
+    public async Task<IActionResult> GetRetrieval(
         Guid retrievalId,
         [FromServices] IQueryDispatcher dispatcher,
         CancellationToken cancellation)
     {
-        var query = new GetRealEstateAgentsRetrievalStatusQuery(retrievalId);
+        var query = new GetRealEstateAgentsRetrievalQuery(retrievalId);
         var retrieval = await dispatcher.Dispatch(query, cancellation);
         if (retrieval is null)
             return NotFound();
-        return Ok(RealEstateAgentsRetrievalStatusDto.From(retrieval));
+        return Ok(RealEstateAgentsRetrievalDto.From(retrieval));
     }
 
     /// <summary>
-    /// Get lightweight status for real estate agent retrievals without the fetched data (to safe traffic).
+    /// Get real estate agent retrievals without the fetched data (to safe traffic).
     /// </summary>
     /// <remarks></remarks>
-    /// <response code="200">retrieal statuses</response>
-    [HttpGet("Statuses")]
-    [ProducesResponseType(typeof(RealEstateAgentsRetrievalStatusDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetStatuses(
+    /// <response code="200">Retrievals</response>
+    [HttpGet("")]
+    [ProducesResponseType(typeof(RealEstateAgentsRetrievalDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetRetrievals(
         [FromServices] IQueryDispatcher dispatcher,
         CancellationToken cancellation)
     {
         // TODO: Do we need to add a pagination here?
 
-        var query = new GetRealEstateAgentsRetrievalStatusesQuery();
+        var query = new GetRealEstateAgentsRetrievalsQuery();
         var retrievals = await dispatcher.Dispatch(query, cancellation);
 
         foreach (var retrieval in retrievals.Where(s => s.RealEstateAgents is not null))
             retrieval.RealEstateAgents = new RealEstateAgent[0];
 
-        var dtos = retrievals.Select(RealEstateAgentsRetrievalStatusDto.From).ToArray();
+        var dtos = retrievals.Select(RealEstateAgentsRetrievalDto.From).ToArray();
         return Ok(dtos);
     }
 }
+
+public record RetrievalDto(Guid RetrievalId);
 
 public record GetTopRealEstateAgentsQueryDto(
     string Location,
@@ -99,29 +99,31 @@ public record RealEstateAgentDto(long AgentId, string AgentName, int ObjectCount
       new(agent.AgentId, agent.AgentName, agent.ObjectCount);
 }
 
-public record RealEstateAgentsRetrievalStatusDto(
+public record RealEstateAgentsRetrievalDto(
+    Guid RetrievalId,
     ProgressInfoDto? Progress,
     RealEstateAgentDto[]? Agents,
     string? ErrorMessage)
 {
-    public RetrievalStatusType Type
+    public RetrievalStatus Status
     {
         get
         {
             if (ErrorMessage is not null)
-                return RetrievalStatusType.Error;
+                return RetrievalStatus.Error;
             if (Agents is not null)
-                return RetrievalStatusType.Completed;
+                return RetrievalStatus.Completed;
             if (Progress is not null)
-                return RetrievalStatusType.Progress;
-            return RetrievalStatusType.None;
+                return RetrievalStatus.Progress;
+            return RetrievalStatus.None;
         }
     }
 
-    public static RealEstateAgentsRetrievalStatusDto From(RealEstateAgentsRetrievalStatus status) =>
-        new(ProgressInfoDto.From(status.Progress),
-            status.RealEstateAgents?.Select(RealEstateAgentDto.From).ToArray(),
-            status.ErrorMessage);
+    public static RealEstateAgentsRetrievalDto From(RealEstateAgentsRetrieval retrieval) =>
+        new(retrieval.RetrievalId,
+            ProgressInfoDto.From(retrieval.Progress),
+            retrieval.RealEstateAgents?.Select(RealEstateAgentDto.From).ToArray(),
+            retrieval.ErrorMessage);
 }
 
-public enum RetrievalStatusType { None, Progress, Completed, Error }
+public enum RetrievalStatus { None, Progress, Completed, Error }

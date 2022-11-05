@@ -21,7 +21,8 @@ public static class ServiceCollectionExtensions
 
         services.AddHttpClient<IFundaApiClient, FundaHttpApiClient>()
             .SetHandlerLifetime(TimeSpan.FromMinutes(6))
-            .ConfigurePrimaryHttpMessageHandler(() => HttpMessageHandlerFactory.RateLimiter(rateLimitOptions))
+            .ConfigurePrimaryHttpMessageHandler(() =>
+                HttpMessageHandlerFactory.RateLimiter(rateLimitOptions))
             .AddPolicyHandler((services, request) =>
                 RetryPolicies.ExponentialBackoff(
                     retryCount: 3,
