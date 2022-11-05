@@ -114,8 +114,8 @@ public record RealEstateAgentsRetrievalDto(
             if (Agents is not null)
                 return RetrievalStatus.Completed;
             if (Progress is not null)
-                return RetrievalStatus.Progress;
-            return RetrievalStatus.None;
+                return RetrievalStatus.InProgress;
+            return RetrievalStatus.Enqueued;
         }
     }
 
@@ -126,4 +126,4 @@ public record RealEstateAgentsRetrievalDto(
             retrieval.ErrorMessage);
 }
 
-public enum RetrievalStatus { None, Progress, Completed, Error }
+public enum RetrievalStatus { Enqueued, InProgress, Completed, Error }

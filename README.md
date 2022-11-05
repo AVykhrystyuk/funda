@@ -32,11 +32,11 @@ sequenceDiagram
     Note over Client,Funda.Web.Api: Request for agents' retrieval is accepted
     
     Client->>+Funda.Web.Api: [GET] /TopRealEstateAgentsRetrievals/{retrievalId}
-    Funda.Web.Api-->>-Client: [200] { "status": "None" }
+    Funda.Web.Api-->>-Client: [200] { "status": "Enqueued" }
     Note over Client,Funda.Web.Api: The retrieval is not launched yet
         
     Client->>+Funda.Web.Api: [GET] /TopRealEstateAgentsRetrievals/{retrievalId}
-    Funda.Web.Api-->>-Client: [200] { "status": "Progress", "progress": { "Total": 120, "Fetched": 10 } }
+    Funda.Web.Api-->>-Client: [200] { "status": "InProgress", "progress": { "Total": 120, "Fetched": 10 } }
     Note over Client,Funda.Web.Api: The retrieval is launched
     
     Client->>+Funda.Web.Api: [GET] /TopRealEstateAgentsRetrievals/{retrievalId}
