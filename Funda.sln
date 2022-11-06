@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.Core", "Funda.Core\Fu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.ApiClient.Abstractions", "Funda.ApiClient.Abstractions\Funda.ApiClient.Abstractions.csproj", "{C73FBDB2-08FF-4859-8BC2-769281EB96D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Common.CQRS", "Funda.Common.CQRS\Funda.Common.CQRS.csproj", "{50C9DB8C-7B29-4AB7-BA0E-8763972D63AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.Common.CQRS", "Funda.Common.CQRS\Funda.Common.CQRS.csproj", "{50C9DB8C-7B29-4AB7-BA0E-8763972D63AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Common.CQRS.Abstractions", "Funda.Common.CQRS.Abstractions\Funda.Common.CQRS.Abstractions.csproj", "{190789E7-36D3-445D-9B36-47C0430FE253}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.Common.CQRS.Abstractions", "Funda.Common.CQRS.Abstractions\Funda.Common.CQRS.Abstractions.csproj", "{190789E7-36D3-445D-9B36-47C0430FE253}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.ApiClient.Http", "Funda.ApiClient.Http\Funda.ApiClient.Http.csproj", "{E817B95C-E1A7-40EC-8ED1-397A8D4DE919}"
 EndProject
@@ -25,15 +25,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.ApiClient.Wcf", "Fund
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.Common", "Funda.Common\Funda.Common.csproj", "{F659165E-0EA0-49DA-95F0-B46B170157BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Queue.Abstractions", "Funda.Queue.Abstractions\Funda.Queue.Abstractions.csproj", "{0CE12427-2F4B-4916-AABA-1660A43E8087}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.Queue.Abstractions", "Funda.Queue.Abstractions\Funda.Queue.Abstractions.csproj", "{0CE12427-2F4B-4916-AABA-1660A43E8087}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Queue.LiteQueue", "Funda.Queue.LiteQueue\Funda.Queue.LiteQueue.csproj", "{01E6A570-9F9F-4B76-9D62-43738AE426D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.Queue.LiteQueue", "Funda.Queue.LiteQueue\Funda.Queue.LiteQueue.csproj", "{01E6A570-9F9F-4B76-9D62-43738AE426D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Queue.Worker.Console", "Funda.Queue.Worker.Console\Funda.Queue.Worker.Console.csproj", "{6F3C49DC-9F83-4BE8-90A1-31A568321011}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.Queue.Worker.Console", "Funda.Queue.Worker.Console\Funda.Queue.Worker.Console.csproj", "{6F3C49DC-9F83-4BE8-90A1-31A568321011}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.DocumentStore.Abstractions", "Funda.DocumentStore.Abstractions\Funda.DocumentStore.Abstractions.csproj", "{5F804961-13A3-4647-A954-47EAAD9F8B8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.DocumentStore.Abstractions", "Funda.DocumentStore.Abstractions\Funda.DocumentStore.Abstractions.csproj", "{5F804961-13A3-4647-A954-47EAAD9F8B8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.DocumentStore.LiteDb", "Funda.DocumentStore.LiteDb\Funda.DocumentStore.LiteDb.csproj", "{59AD82A0-12F8-45C7-9F75-4E6279A24960}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.DocumentStore.LiteDb", "Funda.DocumentStore.LiteDb\Funda.DocumentStore.LiteDb.csproj", "{59AD82A0-12F8-45C7-9F75-4E6279A24960}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.Web.Api.Consumer.Console", "Funda.Web.Api.Consumer.Console\Funda.Web.Api.Consumer.Console.csproj", "{CD337C3A-C308-4AED-B98A-1D21B9727B09}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Http", "Funda.Http\Funda.Http.csproj", "{179CF5DB-214B-4504-8398-8BD5670AA4A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +97,14 @@ Global
 		{59AD82A0-12F8-45C7-9F75-4E6279A24960}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59AD82A0-12F8-45C7-9F75-4E6279A24960}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59AD82A0-12F8-45C7-9F75-4E6279A24960}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD337C3A-C308-4AED-B98A-1D21B9727B09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD337C3A-C308-4AED-B98A-1D21B9727B09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD337C3A-C308-4AED-B98A-1D21B9727B09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD337C3A-C308-4AED-B98A-1D21B9727B09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{179CF5DB-214B-4504-8398-8BD5670AA4A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{179CF5DB-214B-4504-8398-8BD5670AA4A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{179CF5DB-214B-4504-8398-8BD5670AA4A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{179CF5DB-214B-4504-8398-8BD5670AA4A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,295 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Funda Web API",
+    "description": "Helps to determine which real estate agent have the most object listed for sale.",
+    "version": "1.0"
+  },
+  "paths": {
+    "/v1/TopRealEstateAgentsRetrievals": {
+      "post": {
+        "tags": [
+          "TopRealEstateAgentsRetrievals"
+        ],
+        "summary": "Request to retrieve top N number of real estate agent that have the most object listed for sale.",
+        "description": "",
+        "operationId": "CreateRetrieval",
+        "requestBody": {
+          "description": "specific search criteria",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTopRealEstateAgentsQueryDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTopRealEstateAgentsQueryDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTopRealEstateAgentsQueryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "retrieval",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetrievalDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetrievalDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetrievalDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "TopRealEstateAgentsRetrievals"
+        ],
+        "summary": "Get real estate agent retrievals without the fetched data (to safe traffic).",
+        "description": "",
+        "operationId": "GetRetrievals",
+        "responses": {
+          "200": {
+            "description": "Retrievals",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RealEstateAgentsRetrievalDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RealEstateAgentsRetrievalDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RealEstateAgentsRetrievalDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/TopRealEstateAgentsRetrievals/{retrievalId}": {
+      "get": {
+        "tags": [
+          "TopRealEstateAgentsRetrievals"
+        ],
+        "summary": "Get the real estate agent retrieval by retrieval id.",
+        "description": "",
+        "operationId": "GetRetrieval",
+        "parameters": [
+          {
+            "name": "retrievalId",
+            "in": "path",
+            "description": "retrieval Id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieval",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RealEstateAgentsRetrievalDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RealEstateAgentsRetrievalDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RealEstateAgentsRetrievalDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No retrieval for this retrievalId",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GetTopRealEstateAgentsQueryDto": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "outdoors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "topNumberOfAgents": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "ProgressInfoDto": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fetched": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RealEstateAgentDto": {
+        "type": "object",
+        "properties": {
+          "agentId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "agentName": {
+            "type": "string",
+            "nullable": true
+          },
+          "objectCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RealEstateAgentsRetrievalDto": {
+        "type": "object",
+        "properties": {
+          "retrievalId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "progress": {
+            "$ref": "#/components/schemas/ProgressInfoDto"
+          },
+          "agents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RealEstateAgentDto"
+            },
+            "nullable": true
+          },
+          "errorMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/RetrievalStatus"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RetrievalDto": {
+        "type": "object",
+        "properties": {
+          "retrievalId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RetrievalStatus": {
+        "enum": [
+          "Enqueued",
+          "InProgress",
+          "Completed",
+          "Error"
+        ],
+        "type": "string"
+      }
+    }
+  }
+}
