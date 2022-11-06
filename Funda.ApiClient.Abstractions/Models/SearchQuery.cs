@@ -1,3 +1,3 @@
 ﻿namespace Funda.ApiClient.Abstractions.Models;
 
-public record SearchQuery(string Location, string? Outdoor, SortBy SortBy = SortBy.None);
+public record SearchQuery(string Location, string[]? Outdoors, SortBy SortBy = SortBy.None);

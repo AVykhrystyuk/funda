@@ -7,7 +7,7 @@ public interface IRealEstateObjectsFetcher
 {
     Task<IReadOnlyList<RealEstateObject>> Fetch(
         string location, 
-        string? outdoor = null,
+        string[]? outdoors = null,
         Func<ProgressInfo, Task>? onProgress = null, 
         CancellationToken cancellation = default);
 }

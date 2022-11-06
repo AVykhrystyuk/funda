@@ -79,11 +79,11 @@ public record RetrievalDto(Guid RetrievalId);
 
 public record GetTopRealEstateAgentsQueryDto(
     string Location,
-    string? Outdoor = null,
+    string[]? Outdoors = null,
     [Range(1, 1000)] int TopNumberOfAgents = 10)
 {
     public RetrieveRealEstateAgentsCommand ToRetrieveAgentsCommand(Guid retrievalId) => 
-        new(retrievalId, Location, Outdoor, TopNumberOfAgents);
+        new(retrievalId, Location, Outdoors, TopNumberOfAgents);
 }
 
 public record ProgressInfoDto(long Total, long Fetched)

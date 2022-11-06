@@ -10,10 +10,10 @@ public class ConfigureSwaggerOptions : IConfigureNamedOptions<SwaggerGenOptions>
 {
     private readonly IApiVersionDescriptionProvider _provider;
 
-    public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) => 
+    public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) =>
         _provider = provider;
 
-    public void Configure(string name, SwaggerGenOptions options) => 
+    public void Configure(string name, SwaggerGenOptions options) =>
         Configure(options);
 
     public void Configure(SwaggerGenOptions options)
@@ -29,6 +29,10 @@ public class ConfigureSwaggerOptions : IConfigureNamedOptions<SwaggerGenOptions>
         options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
         options.CustomOperationIds((apiDescription) => apiDescription.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
+
+        // options.SupportNonNullableReferenceTypes();            
+        // options.UseAllOfToExtendReferenceSchemas();
+        // options.UseAllOfForInheritance();
     }
 
     private static OpenApiInfo CreateVersionInfo(ApiVersionDescription desc)

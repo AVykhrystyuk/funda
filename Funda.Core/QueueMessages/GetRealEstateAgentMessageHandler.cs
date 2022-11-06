@@ -42,8 +42,18 @@ public class GetRealEstateAgentMessageHandler
             return false;
         }
 
-        static string LogKey(GetRealEstateAgent message) =>
-            $"{message.RetrievalId}/{message.Location}/{message.Outdoor}/{message.TopNumberOfAgents}";
+        static string LogKey(GetRealEstateAgent message) 
+        {
+            var keyParams = new List<string>
+            {
+                message.RetrievalId.ToString(),
+                message.Location,
+            };
+            keyParams.AddRange(message.Outdoors ?? Array.Empty<string>());
+            keyParams.Add(message.TopNumberOfAgents.ToString());
+
+            return string.Join("/", keyParams);
+        }
     }
 
     private async Task ProcessMessageInternal(GetRealEstateAgent message)
@@ -51,9 +61,9 @@ public class GetRealEstateAgentMessageHandler
         var key = GetDocumentKey(message);
 
         async Task OnProgress(ProgressInfo info) =>
-            await UpdateRetrieval(key, retrieval => retrieval.Progress = info);
+            await UpdateRetrieval(key!, retrieval => retrieval.Progress = info);
 
-        var realEstateObjects = await _objectsFetcher.Fetch(message.Location, message.Outdoor, OnProgress);
+        var realEstateObjects = await _objectsFetcher.Fetch(message.Location, message.Outdoors, OnProgress);
 
         _logger.LogInformation("Aggregate top {NumberOfAgents} agents", message.TopNumberOfAgents);
         var realEstateAgents = _objectsAggregator.GetTopAgents(realEstateObjects, message.TopNumberOfAgents).ToArray();

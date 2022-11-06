@@ -28,7 +28,7 @@ public class RetrieveRealEstateAgentsCommandHandler : ICommandHandler<RetrieveRe
         {
             RetrievalId = command.RetrievalId,
             Location = command.Location,
-            Outdoor = command.Outdoor,
+            Outdoors = command.Outdoors,
             TopNumberOfAgents = command.TopNumberOfAgents,
         };
         await _queue.Enqueue(message);

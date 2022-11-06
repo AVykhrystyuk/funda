@@ -36,16 +36,21 @@ public class QueueAdapter<T> : IQueue<T>
             {
                 var handled = handleMessage(record.Payload);
                 if (!handled)
+                {
+                    BackToQueue(record);
                     continue;
-
+                }
+                    
                 // Removes record from queue
                 _queue.Commit(record);
             }
             catch
             {
-                // Returns the record to the queue
-                _queue.Abort(record);
+                BackToQueue(record);
             }
         }
     }
+
+    private void BackToQueue(QueueEntry<T> record) => 
+        _queue.Abort(record);
 }

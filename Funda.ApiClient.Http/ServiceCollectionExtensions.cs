@@ -2,6 +2,7 @@
 using Funda.ApiClient.Http.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Funda.ApiClient.Http;
 
@@ -20,12 +21,17 @@ public static class ServiceCollectionExtensions
         configureRateLimitOptions(rateLimitOptions);
 
         services.AddHttpClient<IFundaApiClient, FundaHttpApiClient>()
+            .ConfigureHttpClient((p, client) =>
+            {
+                var options = p.GetRequiredService<IOptions<FundaHttpApiOptions>>().Value;
+                client.Timeout = options.Timeout;
+            })
             .SetHandlerLifetime(TimeSpan.FromMinutes(6))
             .ConfigurePrimaryHttpMessageHandler(() =>
                 HttpMessageHandlerFactory.RateLimiter(rateLimitOptions))
             .AddPolicyHandler((services, request) =>
                 RetryPolicies.ExponentialBackoff(
-                    retryCount: 3,
+                    retryCount: 5,
                     retryNeeded: FundaHttpApiClient.IsTooManyRequests,
                     beforeDelay: LogBeforeDelay(services)))
             .AddPolicyHandler(

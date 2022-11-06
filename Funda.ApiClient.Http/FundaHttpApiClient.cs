@@ -65,14 +65,11 @@ public class FundaHttpApiClient : IFundaApiClient
 
     private static string BuildSearchParams(SearchQuery query)
     {
-        var searchParams = new[]
-        {
-            query.Location,
-            query.Outdoor,
-            SortByToUrlPart(query.SortBy),
-        }.Where(p => !string.IsNullOrEmpty(p));
+        var searchParams = new List<string> { query.Location };
+        searchParams.AddRange(query.Outdoors ?? Array.Empty<string>());
+        searchParams.Add(SortByToUrlPart(query.SortBy));
 
-        return string.Join("/", searchParams);
+        return string.Join("/", searchParams.Where(p => !string.IsNullOrWhiteSpace(p)));
 
         static string SortByToUrlPart(SortBy sortBy) => sortBy switch
         {

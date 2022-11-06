@@ -21,13 +21,13 @@ internal class RealEstateObjectsFetcher : IRealEstateObjectsFetcher
 
     public async Task<IReadOnlyList<RealEstateObject>> Fetch(
         string location,
-        string? outdoor = null,
+        string[]? outdoors = null,
         Func<ProgressInfo, Task>? onProgress = null,
         CancellationToken cancellation = default)
     {
         var searchQuery = new SearchQuery(
             location,
-            outdoor,
+            outdoors,
             SortBy.DateAscending); // NOTE: Important! Helps to avoid "Page drift" when new objects are added
         _logger.LogDebug("Start fetching real estate agents for {searchQuery}", searchQuery);
 

@@ -4,6 +4,6 @@ namespace Funda.Core.Commands;
 
 public record RetrieveRealEstateAgentsCommand(
     Guid RetrievalId, 
-    string Location, 
-    string? Outdoor, 
+    string Location,
+    string[]? Outdoors, 
     int TopNumberOfAgents) : ICommand;
