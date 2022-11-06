@@ -22,11 +22,6 @@
                 "$ref": "#/components/schemas/GetTopRealEstateAgentsQueryDto"
               }
             },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GetTopRealEstateAgentsQueryDto"
-              }
-            },
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/GetTopRealEstateAgentsQueryDto"
@@ -36,19 +31,9 @@
         },
         "responses": {
           "202": {
-            "description": "retrieval",
+            "description": "retrieval created",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/RetrievalDto"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RetrievalDto"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RetrievalDto"
                 }
@@ -68,23 +53,7 @@
           "200": {
             "description": "Retrievals",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RealEstateAgentsRetrievalDto"
-                  }
-                }
-              },
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RealEstateAgentsRetrievalDto"
-                  }
-                }
-              },
-              "text/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -121,17 +90,7 @@
           "200": {
             "description": "Retrieval",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/RealEstateAgentsRetrievalDto"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RealEstateAgentsRetrievalDto"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RealEstateAgentsRetrievalDto"
                 }
@@ -141,17 +100,7 @@
           "404": {
             "description": "No retrieval for this retrievalId",
             "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
                 }
@@ -165,20 +114,32 @@
   "components": {
     "schemas": {
       "GetTopRealEstateAgentsQueryDto": {
+        "required": [
+          "location",
+          "newRetrievalId"
+        ],
         "type": "object",
         "properties": {
-          "location": {
+          "newRetrievalId": {
             "type": "string",
-            "nullable": true
+            "description": "Clients must generate unique retrievalId (idempotency support)",
+            "format": "uuid"
+          },
+          "location": {
+            "minLength": 1,
+            "type": "string"
           },
           "outdoors": {
             "type": "array",
             "items": {
               "type": "string"
             },
+            "description": "Tuin, Balkon, Dakterras, etc",
             "nullable": true
           },
           "topNumberOfAgents": {
+            "maximum": 1000,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           }

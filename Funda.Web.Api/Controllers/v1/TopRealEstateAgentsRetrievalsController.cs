@@ -16,7 +16,7 @@ public class TopRealEstateAgentsRetrievalsController : ControllerBase
     /// </summary>
     /// <remarks></remarks>
     /// <param name="query">specific search criteria</param>
-    /// <response code="202">retrieval</response>
+    /// <response code="202">retrieval created</response>
     [HttpPost("")]
     [ProducesResponseType(typeof(RetrievalDto), StatusCodes.Status202Accepted)]
     public async Task<ActionResult<RetrievalDto>> CreateRetrieval(
@@ -24,10 +24,9 @@ public class TopRealEstateAgentsRetrievalsController : ControllerBase
         [FromServices] ICommandDispatcher dispatcher,
         CancellationToken cancellation)
     {
-        var newRetrievalId = Guid.NewGuid();
-        var command = query.ToRetrieveAgentsCommand(newRetrievalId);
+        var command = query.ToRetrieveAgentsCommand();
         await dispatcher.Dispatch(command, cancellation);
-        return Accepted(new RetrievalDto(newRetrievalId));
+        return Accepted(new RetrievalDto(command.RetrievalId));
     }
 
     /// <summary>
@@ -77,13 +76,27 @@ public class TopRealEstateAgentsRetrievalsController : ControllerBase
 
 public record RetrievalDto(Guid RetrievalId);
 
-public record GetTopRealEstateAgentsQueryDto(
-    string Location,
-    string[]? Outdoors = null,
-    [Range(1, 1000)] int TopNumberOfAgents = 10)
+public class GetTopRealEstateAgentsQueryDto
 {
-    public RetrieveRealEstateAgentsCommand ToRetrieveAgentsCommand(Guid retrievalId) => 
-        new(retrievalId, Location, Outdoors, TopNumberOfAgents);
+    /// <summary>
+    /// Clients must generate unique retrievalId (idempotency support)
+    /// </summary>
+    [Required]
+    public Guid? NewRetrievalId { get; init; }
+
+    [Required]
+    public string Location { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Tuin, Balkon, Dakterras, etc
+    /// </summary>
+    public string[]? Outdoors { get; init; }
+
+    [Range(1, 1000)]
+    public int TopNumberOfAgents { get; init; } = 10;
+
+    public RetrieveRealEstateAgentsCommand ToRetrieveAgentsCommand() =>
+        new(NewRetrievalId!.Value, Location, Outdoors, TopNumberOfAgents);
 }
 
 public record ProgressInfoDto(long Total, long Fetched)

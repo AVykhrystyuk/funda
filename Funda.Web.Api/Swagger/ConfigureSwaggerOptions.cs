@@ -29,10 +29,6 @@ public class ConfigureSwaggerOptions : IConfigureNamedOptions<SwaggerGenOptions>
         options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
         options.CustomOperationIds((apiDescription) => apiDescription.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
-
-        // options.SupportNonNullableReferenceTypes();            
-        // options.UseAllOfToExtendReferenceSchemas();
-        // options.UseAllOfForInheritance();
     }
 
     private static OpenApiInfo CreateVersionInfo(ApiVersionDescription desc)

@@ -21,6 +21,10 @@ public class RetrieveRealEstateAgentsCommandHandler : ICommandHandler<RetrieveRe
 
     public async Task Handle(RetrieveRealEstateAgentsCommand command, CancellationToken cancellation)
     {
+        var existingRetrieval = await _collection.Get(command.RetrievalId);
+        if (existingRetrieval is not null)
+            throw new BusinessLogicException($"Retrieval with '{command.RetrievalId}' id already exists.") { Code = ErrorCode.InvalidOperation };
+
         var retrieval = new RealEstateAgentsRetrieval { RetrievalId = command.RetrievalId };
         await _collection.Insert(command.RetrievalId, retrieval);
 

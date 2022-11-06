@@ -1,11 +1,13 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using Funda.ApiClient.Http;
 using Funda.Core;
 using Funda.Core.Models;
 using Funda.Core.QueueMessages;
 using Funda.DocumentStore.LiteDb;
 using Funda.Queue.LiteQueue;
+using Funda.Web.Api.Filters;
 using Funda.Web.Api.Swagger;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 
@@ -14,7 +16,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services
-    .AddControllers()
+    .AddControllers(options =>
+    {
+        options.Filters.Add(new ConsumesAttribute("application/json")); 
+        options.Filters.Add(new ProducesAttribute("application/json"));
+        options.Filters.Add<HttpResponseExceptionFilter>();
+    })
     .AddJsonOptions(options =>
     {
         //options.JsonSerializerOptions.IgnoreNullValues = true;

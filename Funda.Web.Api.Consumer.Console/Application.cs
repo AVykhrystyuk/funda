@@ -16,11 +16,13 @@ internal class Application
         {
             new GetTopRealEstateAgentsQueryDto
             {
+                NewRetrievalId = Guid.NewGuid(),
                 Location = "Amsterdam",
                 TopNumberOfAgents = 10,
             },
             new GetTopRealEstateAgentsQueryDto
             {
+                NewRetrievalId = Guid.NewGuid(),
                 Location = "Amsterdam",
                 Outdoors = new[] { "Tuin" },
                 TopNumberOfAgents = 15,
@@ -33,13 +35,16 @@ internal class Application
             Console.WriteLine();
             Console.WriteLine();
         }
+
+        Console.WriteLine("Press enter to exit...");
+        Console.ReadLine();
     }
 
     private async Task FetchAndDisplay(GetTopRealEstateAgentsQueryDto query)
     {
         var fullLocation = GetFullLocation(query);
         Console.WriteLine($"{fullLocation} (top {query.TopNumberOfAgents}):");
-        Console.WriteLine($"Starting to find out which (top {query.TopNumberOfAgents}) real estate agents in {fullLocation} have the most object listed for sale...");
+        Console.WriteLine($"Starting to find out top {query.TopNumberOfAgents} real estate agents in {fullLocation} that have the most object listed for sale...");
 
         var retrievalCreated = await _api.CreateRetrievalAsync(query);
 
