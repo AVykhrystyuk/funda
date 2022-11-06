@@ -14,19 +14,18 @@ public static class ServiceCollectionExtensions
         configureOptions(options);
 
         return services
-            .AddTransient(_ => new LiteDatabase(options.ConnectionString))
+            .AddTransient(_ => new LiteDatabaseContainer(new LiteDatabase(options.ConnectionString)))
             .AddDocumentCollection<TDoc>(options.Collection);
     }
 
-    public static IServiceCollection AddDocumentCollection<TDoc>(this IServiceCollection services, string name)
-    {
+    public static IServiceCollection AddDocumentCollection<TDoc>(this IServiceCollection services, string name) =>
         services.AddTransient<IDocumentCollection<TDoc>>(provider =>
         {
-            var db = provider.GetRequiredService<LiteDatabase>();
+            var db = provider.GetRequiredService<LiteDatabaseContainer>().Db;
             var collection = db.GetCollection<TDoc>(name);
             return new DocumentCollectionAdapter<TDoc>(db, collection);
         });
 
-        return services;
-    }
+    // local class to isolate LiteDatabase, to be able to re
+    private record LiteDatabaseContainer(LiteDatabase Db);
 }

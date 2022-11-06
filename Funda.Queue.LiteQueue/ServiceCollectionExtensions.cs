@@ -16,7 +16,7 @@ public static class ServiceCollectionExtensions
         configureOptions(options);
 
         return services
-            .AddTransient(_ => new LiteDatabase(options.ConnectionString))
+            .AddTransient(_ => new LiteDatabaseContainer(new LiteDatabase(options.ConnectionString)))
             .AddLiteQueue<TMessage>(options.Collection, dequeueInterval);
     }
 
@@ -26,7 +26,7 @@ public static class ServiceCollectionExtensions
         TimeSpan? dequeueInterval = null) =>
         services.AddTransient<IQueue<TMessage>>(provider =>
         {
-            var db = provider.GetRequiredService<LiteDatabase>();
+            var db = provider.GetRequiredService<LiteDatabaseContainer>().Db;
             var queue = new LiteQueue<TMessage>(db, queueCollection);
 
             // Recommended on startup to reset anything that was checked out but not committed or aborted.
@@ -34,4 +34,7 @@ public static class ServiceCollectionExtensions
 
             return new QueueAdapter<TMessage>(queue, dequeueInterval);
         });
+
+    // local class to isolate LiteDatabase, to be able to re
+    private record LiteDatabaseContainer(LiteDatabase Db);
 }
