@@ -1,4 +1,4 @@
-﻿using Funda.Common.CQRS.Abstractions;
+﻿using Funda.Common.Cqrs.Abstractions;
 
 namespace Funda.Core.Commands;
 

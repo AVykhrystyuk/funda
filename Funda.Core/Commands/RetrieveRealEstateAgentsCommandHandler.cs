@@ -1,4 +1,4 @@
-﻿using Funda.Common.CQRS.Abstractions;
+﻿using Funda.Common.Cqrs.Abstractions;
 using Funda.Core.Models;
 using Funda.Core.QueueMessages;
 using Funda.DocumentStore.Abstractions;

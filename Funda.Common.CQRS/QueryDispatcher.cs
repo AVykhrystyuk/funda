@@ -1,7 +1,7 @@
-﻿using Funda.Common.CQRS.Abstractions;
+﻿using Funda.Common.Cqrs.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Funda.Common.CQRS;
+namespace Funda.Common.Cqrs;
 
 public class QueryDispatcher : IQueryDispatcher
 {
@@ -18,7 +18,7 @@ public class QueryDispatcher : IQueryDispatcher
         return handler.Handle(query, cancellation);
     }
 
-    private static Type GenericHandlerType<TResult>(IQuery<TResult> query) => 
+    private static Type GenericHandlerType<TResult>(IQuery<TResult> query) =>
         typeof(IQueryHandler<,>)
             .MakeGenericType(query.GetType(), typeof(TResult));
 }

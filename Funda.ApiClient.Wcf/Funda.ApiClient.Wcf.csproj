@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <NoWarn>1701;1702;0108</NoWarn>
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="System.ServiceModel.Duplex" Version="4.10.0" />
     <PackageReference Include="System.ServiceModel.Federation" Version="4.10.0" />

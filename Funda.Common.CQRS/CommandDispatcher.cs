@@ -1,7 +1,7 @@
-﻿using Funda.Common.CQRS.Abstractions;
+﻿using Funda.Common.Cqrs.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Funda.Common.CQRS;
+namespace Funda.Common.Cqrs;
 
 public class CommandDispatcher : ICommandDispatcher
 {

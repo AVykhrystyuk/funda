@@ -5,7 +5,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\Funda.Common.CQRS.Abstractions\Funda.Common.CQRS.Abstractions.csproj" />
+    <ProjectReference Include="..\Funda.Common.Cqrs.Abstractions\Funda.Common.Cqrs.Abstractions.csproj" />
   </ItemGroup>
   
 </Project>

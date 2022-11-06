@@ -38,7 +38,8 @@ internal class Application
     private async Task FetchAndDisplay(GetTopRealEstateAgentsQueryDto query)
     {
         var fullLocation = GetFullLocation(query);
-        Console.WriteLine($"Starting to find out which real estate agents in {fullLocation} have the most object listed for sale...");
+        Console.WriteLine($"{fullLocation} (top {query.TopNumberOfAgents}):");
+        Console.WriteLine($"Starting to find out which (top {query.TopNumberOfAgents}) real estate agents in {fullLocation} have the most object listed for sale...");
 
         var retrievalCreated = await _api.CreateRetrievalAsync(query);
 

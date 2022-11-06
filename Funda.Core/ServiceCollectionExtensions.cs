@@ -1,5 +1,5 @@
-﻿using Funda.Common.CQRS;
-using Funda.Common.CQRS.Abstractions;
+﻿using Funda.Common.Cqrs;
+using Funda.Common.Cqrs.Abstractions;
 using Funda.Core.Queries;
 using Funda.Core.QueueMessages;
 using Microsoft.Extensions.DependencyInjection;

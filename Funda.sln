@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C479EB6D-2874-4E60-BA7D-DFABE3249AC3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solution Items", "{C479EB6D-2874-4E60-BA7D-DFABE3249AC3}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		README.md = README.md
@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.Core", "Funda.Core\Fu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.ApiClient.Abstractions", "Funda.ApiClient.Abstractions\Funda.ApiClient.Abstractions.csproj", "{C73FBDB2-08FF-4859-8BC2-769281EB96D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.Common.CQRS", "Funda.Common.CQRS\Funda.Common.CQRS.csproj", "{50C9DB8C-7B29-4AB7-BA0E-8763972D63AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.Common.Cqrs", "Funda.Common.Cqrs\Funda.Common.Cqrs.csproj", "{50C9DB8C-7B29-4AB7-BA0E-8763972D63AF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.Common.CQRS.Abstractions", "Funda.Common.CQRS.Abstractions\Funda.Common.CQRS.Abstractions.csproj", "{190789E7-36D3-445D-9B36-47C0430FE253}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.Common.Cqrs.Abstractions", "Funda.Common.Cqrs.Abstractions\Funda.Common.Cqrs.Abstractions.csproj", "{190789E7-36D3-445D-9B36-47C0430FE253}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.ApiClient.Http", "Funda.ApiClient.Http\Funda.ApiClient.Http.csproj", "{E817B95C-E1A7-40EC-8ED1-397A8D4DE919}"
 EndProject
@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.DocumentStore.LiteDb"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.Web.Api.Consumer.Console", "Funda.Web.Api.Consumer.Console\Funda.Web.Api.Consumer.Console.csproj", "{CD337C3A-C308-4AED-B98A-1D21B9727B09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Common.Http", "Funda.Common.Http\Funda.Common.Http.csproj", "{179CF5DB-214B-4504-8398-8BD5670AA4A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.Common.Http", "Funda.Common.Http\Funda.Common.Http.csproj", "{179CF5DB-214B-4504-8398-8BD5670AA4A8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EntryPoints", "EntryPoints", "{3AFA5E0F-D596-4301-84A1-E04708CB0AB4}"
 EndProject

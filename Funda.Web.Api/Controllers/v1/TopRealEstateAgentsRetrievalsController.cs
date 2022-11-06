@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Funda.Common.CQRS.Abstractions;
+using Funda.Common.Cqrs.Abstractions;
 using Funda.Core.Commands;
 using Funda.Core.Models;
 using Funda.Core.Queries;

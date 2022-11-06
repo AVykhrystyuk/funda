@@ -13,7 +13,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\Funda.ApiClient.Http\Funda.ApiClient.Http.csproj" />
-    <ProjectReference Include="..\Funda.Common.CQRS\Funda.Common.CQRS.csproj" />
+    <ProjectReference Include="..\Funda.Common.Cqrs\Funda.Common.Cqrs.csproj" />
     <ProjectReference Include="..\Funda.Core\Funda.Core.csproj" />
     <ProjectReference Include="..\Funda.DocumentStore.LiteDb\Funda.DocumentStore.LiteDb.csproj" />
     <ProjectReference Include="..\Funda.Queue.Abstractions\Funda.Queue.Abstractions.csproj" />
