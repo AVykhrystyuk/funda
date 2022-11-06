@@ -1,5 +1,5 @@
 ﻿using Funda.ApiClient.Abstractions;
-using Funda.Http;
+using Funda.Common.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

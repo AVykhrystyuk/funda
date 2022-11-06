@@ -37,7 +37,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.DocumentStore.LiteDb"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funda.Web.Api.Consumer.Console", "Funda.Web.Api.Consumer.Console\Funda.Web.Api.Consumer.Console.csproj", "{CD337C3A-C308-4AED-B98A-1D21B9727B09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Http", "Funda.Http\Funda.Http.csproj", "{179CF5DB-214B-4504-8398-8BD5670AA4A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Common.Http", "Funda.Common.Http\Funda.Common.Http.csproj", "{179CF5DB-214B-4504-8398-8BD5670AA4A8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EntryPoints", "EntryPoints", "{3AFA5E0F-D596-4301-84A1-E04708CB0AB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -108,6 +110,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{853EC56D-C33A-444E-A189-107647616726} = {3AFA5E0F-D596-4301-84A1-E04708CB0AB4}
+		{6F3C49DC-9F83-4BE8-90A1-31A568321011} = {3AFA5E0F-D596-4301-84A1-E04708CB0AB4}
+		{CD337C3A-C308-4AED-B98A-1D21B9727B09} = {3AFA5E0F-D596-4301-84A1-E04708CB0AB4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F6DA27A4-3F63-46E9-BBC5-BAEDF38A8B02}

@@ -1,4 +1,4 @@
-﻿using Funda.Http;
+﻿using Funda.Common.Http;
 using FundaWebApiGeneratedClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

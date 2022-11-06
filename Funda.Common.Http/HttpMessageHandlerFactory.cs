@@ -1,7 +1,7 @@
 ﻿using ComposableAsync;
 using RateLimiter;
 
-namespace Funda.Http;
+namespace Funda.Common.Http;
 
 public static class HttpMessageHandlerFactory
 {

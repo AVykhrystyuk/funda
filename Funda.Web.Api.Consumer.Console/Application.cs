@@ -17,13 +17,13 @@ internal class Application
             new GetTopRealEstateAgentsQueryDto
             {
                 Location = "Amsterdam",
-                Outdoors = new[] { "tuin" },
-                TopNumberOfAgents = 10
+                TopNumberOfAgents = 10,
             },
             new GetTopRealEstateAgentsQueryDto
             {
                 Location = "Amsterdam",
-                TopNumberOfAgents = 10
+                Outdoors = new[] { "Tuin" },
+                TopNumberOfAgents = 15,
             },
         };
 
@@ -38,7 +38,7 @@ internal class Application
     private async Task FetchAndDisplay(GetTopRealEstateAgentsQueryDto query)
     {
         var fullLocation = GetFullLocation(query);
-        Console.WriteLine($"Start finding out which real estate agents in {fullLocation} have the most object listed for sale...");
+        Console.WriteLine($"Starting to find out which real estate agents in {fullLocation} have the most object listed for sale...");
 
         var retrievalCreated = await _api.CreateRetrievalAsync(query);
 
@@ -55,7 +55,7 @@ internal class Application
             {
                 if (!totalIsShown)
                 {
-                    Console.WriteLine($"Found {progress.Total} objects in total. Fetching...");
+                    Console.WriteLine($"Found {progress.Total} objects in total. Fetching them...");
                     totalIsShown = true;
                 }
                 else MoveCursorToLeft(); // to clear current console line
