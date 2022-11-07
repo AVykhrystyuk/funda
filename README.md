@@ -17,7 +17,7 @@ Solution is built using Clean Architecture + CQRS and asynchronous processing of
 - Tired to use generated WCF Service Reference (http://partnerapi.funda.nl/feeds/Aanbod.svc?wsdl) but it keept failing with non-self-explanatory errors so I moved to calling the service from http client.
 - Retries and circuit breaker policies are implemented in `Funda.ApiClient.Http` (ServiceCollectionExtensions). Also there is `HttpMessageHandlerFactory.RateLimiter` to handle the Funda's "rate limiter" - API requests are limited to 100 requests per minute.
 - Apply `SortBy.DateAscending` for Funda search queries to avoid a `"Page drift"` when new objects are added during the fetch.
-- To support idempotent [POST] (CreateRetrieval) we have to delegate the creation of unique retrieval identifiers to trusted clients
+- To support idempotent `POST` (CreateRetrieval) we have to delegate the creation of unique search identifiers to trusted clients.
 
 ## System design decisions
 
