@@ -75,13 +75,14 @@ flowchart TB
 * Restore NuGet packages.
 * Make the following 2 projects `Funda.Web.Api` & `Funda.Queue.Worker.Console` to be Multiple Startup Projects (with Action `'Start'`) in Visual Studio (VS) so that when you run the solution all of them start at the same time.
 * Run the solution from VS.
-* Run the following command to issue a fetch request (or use a Swagger UI) that will be put in a queue and processed asynchronously by a background worker. The Api will return you `retrievalId` (Guid) that is required to receive the result of the background fetch:
+* Run the following command to issue a fetch request (or use a Swagger UI) that will be enqueued and processed asynchronously by a background worker. The Api will return you `retrievalId` (Guid) that is required to receive the result of the background fetch:
 ```bash
 curl -X 'POST' \
   'https://localhost:7215/v1/TopRealEstateAgentsRetrievals' \
   -H 'accept: text/plain' \
   -H 'Content-Type: application/json' \
   -d '{
+    "newRetrievalId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "location": "Amsterdam",
     "outdoors": ["Tuin"],
     "topNumberOfAgents": 10
@@ -90,6 +91,6 @@ curl -X 'POST' \
 * Poll the following command to see the fetch process:
 ```bash
 curl -X 'GET' \
-  'https://localhost:7215/v1/TopRealEstateAgentsRetrievals/{retrievalId}' \
+  'https://localhost:7215/v1/TopRealEstateAgentsRetrievals/3fa85f64-5717-4562-b3fc-2c963f66afa6' \
   -H 'accept: text/plain'
 ```
