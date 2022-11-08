@@ -28,10 +28,14 @@ So processing all of them synchronously (within a single long-running API reques
 ```mermaid
 %% This diagram needs to be rendered, for example, GitHub renders it by default.
 sequenceDiagram
+    Note over Client: Requests an retrieval
     Client->>+Funda.Web.Api: [POST] /TopRealEstateAgentsRetrievals { "newRetrievalId": "...", "location": "..." }
     Funda.Web.Api-->>-Client: [202] { "retrievalId": "..." }
     Note over Client,Funda.Web.Api: Request for agents' retrieval is accepted
     
+    rect rgb(191, 223, 255)
+    
+    Note over Client: Polls the retrieval
     Client->>+Funda.Web.Api: [GET] /TopRealEstateAgentsRetrievals/{retrievalId}
     Funda.Web.Api-->>-Client: [200] { "status": "Enqueued" }
     Note over Client,Funda.Web.Api: The retrieval is not launched yet
@@ -43,6 +47,7 @@ sequenceDiagram
     Client->>+Funda.Web.Api: [GET] /TopRealEstateAgentsRetrievals/{retrievalId}
     Funda.Web.Api-->>-Client: [200] { "status": "Completed", "progress": { "Total": 120, "Fetched": 120 }, "agents": [...] }
     Note over Client,Funda.Web.Api: The retrieval is completed, and "agents" array is populated in the response
+    end
 ```
 
 #### This is how the search request is handled under the hood:
