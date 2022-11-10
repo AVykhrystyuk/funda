@@ -99,3 +99,9 @@ curl -X 'GET' \
   'https://localhost:7215/v1/TopRealEstateAgentsRetrievals/3fa85f64-5717-4562-b3fc-2c963f66afa6' \
   -H 'accept: text/plain'
 ```
+
+## "Production-ready" TODO list:
+- [ ] Add some integration tests
+- [ ] Configure CI (GitHub actions)
+- [ ] Move secrets out of the configs (some kind of key secrets storage is needed)
+- [ ] Use proper database/data stores
