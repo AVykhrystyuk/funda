@@ -29,24 +29,24 @@ So processing all of them synchronously (within a single long-running API reques
 %% This diagram needs to be rendered, for example, GitHub renders it by default.
 sequenceDiagram
     Note over Client: Requests an retrieval
-    Client->>+Funda.Web.Api: [POST] /TopRealEstateAgentsRetrievals { "newRetrievalId": "...", "location": "..." }
-    Funda.Web.Api-->>-Client: [202] { "retrievalId": "..." }
-    Note over Client,Funda.Web.Api: Request for agents' retrieval is accepted
+    Client->>+Web.Api: [POST] /TopRealEstateAgentsRetrievals { "newRetrievalId": "...", "location": "..." }
+    Web.Api-->>-Client: [202] { "retrievalId": "..." }
+    Note over Client,Web.Api: Request for agents' retrieval is accepted
     
     rect rgb(191, 223, 255)
     
     Note over Client: Polls the retrieval
-    Client->>+Funda.Web.Api: [GET] /TopRealEstateAgentsRetrievals/{retrievalId}
-    Funda.Web.Api-->>-Client: [200] { "status": "Enqueued" }
-    Note over Client,Funda.Web.Api: The retrieval is not launched yet
+    Client->>+Web.Api: [GET] /TopRealEstateAgentsRetrievals/{retrievalId}
+    Web.Api-->>-Client: [200] { "status": "Enqueued" }
+    Note over Client,Web.Api: The retrieval is not launched yet
         
-    Client->>+Funda.Web.Api: [GET] /TopRealEstateAgentsRetrievals/{retrievalId}
-    Funda.Web.Api-->>-Client: [200] { "status": "InProgress", "progress": { "Total": 120, "Fetched": 10 } }
-    Note over Client,Funda.Web.Api: The retrieval is launched
+    Client->>+Web.Api: [GET] /TopRealEstateAgentsRetrievals/{retrievalId}
+    Web.Api-->>-Client: [200] { "status": "InProgress", "progress": { "Total": 120, "Fetched": 10 } }
+    Note over Client,Web.Api: The retrieval is launched
     
-    Client->>+Funda.Web.Api: [GET] /TopRealEstateAgentsRetrievals/{retrievalId}
-    Funda.Web.Api-->>-Client: [200] { "status": "Completed", "progress": { "Total": 120, "Fetched": 120 }, "agents": [...] }
-    Note over Client,Funda.Web.Api: The retrieval is completed, and "agents" array is populated in the response
+    Client->>+Web.Api: [GET] /TopRealEstateAgentsRetrievals/{retrievalId}
+    Web.Api-->>-Client: [200] { "status": "Completed", "progress": { "Total": 120, "Fetched": 120 }, "agents": [...] }
+    Note over Client,Web.Api: The retrieval is completed, and "agents" array is populated in the response
     end
 ```
 
@@ -55,17 +55,17 @@ sequenceDiagram
 %% This diagram needs to be rendered, for example, GitHub renders it by default.
 flowchart TB
     C([Client])
-    WebApi(Funda.Web.Api)
-    Queue[[Funda.Queue.LiteQueue]]
-    Worker(Funda.Queue.Worker.Console)
-    KVStore[(Funda.DocumentStore.LiteDb)]
-    ApiClient[[Funda.ApiClient.Http]]
+    WebApi(Web.Api)
+    Queue[[Queue.LiteQueue]]
+    Worker(Queue.Worker.Console)
+    KVStore[(DocumentStore.LiteDb)]
+    ApiClient[[ApiClient.Http]]
     
     C-- POST retrieval query -->WebApi-- pushes message to queue --> Queue
     WebApi-- returns retrieval id back -->C
     Worker<-- waits for a message  -->Queue
     Worker<-- fetches the data  --> ApiClient
-    Worker-- stores the fetch progress + the fetched data --> KVStore
+    Worker-- stores the fetch progress --> KVStore
 ```
 
 
